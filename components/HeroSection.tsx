@@ -1,10 +1,10 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import { Monitor, Globe, ShoppingBag, Calculator, Server } from "lucide-react";
 
 export default function HeroSection() {
-    const lineVariants = {
+    const lineVariants: Variants = {
         initial: { pathLength: 0, opacity: 0 },
         animate: {
             pathLength: 1,

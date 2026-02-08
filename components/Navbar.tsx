@@ -2,13 +2,21 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Menu, X, ChevronDown, Monitor, ShoppingBag, Activity, Code } from "lucide-react";
 import { cn } from "@/lib/utils";
+
+const solutions = [
+    { name: "Smart POS", href: "/solutions/smart-pos", icon: Monitor, color: "text-blue-400" },
+    { name: "Marketplaces", href: "/solutions/marketplace", icon: ShoppingBag, color: "text-purple-400" },
+    { name: "Finanzas", href: "/solutions/finances", icon: Activity, color: "text-green-400" },
+    { name: "Web & E-commerce", href: "/solutions/web-development", icon: Code, color: "text-orange-400" },
+];
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -34,15 +42,45 @@ export default function Navbar() {
 
                 {/* Desktop Nav */}
                 <nav className="hidden md:flex items-center gap-8">
-                    {["Plataforma", "Servicios Web", "Casos de Éxito"].map((item) => (
-                        <Link
-                            key={item}
-                            href={`#${item.toLowerCase().replace(/ /g, "-")}`}
-                            className="text-sm font-medium text-white/70 hover:text-neon-blue transition-colors"
-                        >
-                            {item}
-                        </Link>
-                    ))}
+                    {/* Solutions Dropdown */}
+                    <div
+                        className="relative group"
+                        onMouseEnter={() => setDropdownOpen(true)}
+                        onMouseLeave={() => setDropdownOpen(false)}
+                    >
+                        <button className="flex items-center gap-1 text-sm font-medium text-white/70 hover:text-neon-blue transition-colors py-2">
+                            Soluciones <ChevronDown className={cn("w-4 h-4 transition-transform", dropdownOpen ? "rotate-180" : "")} />
+                        </button>
+
+                        <AnimatePresence>
+                            {dropdownOpen && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: 10 }}
+                                    className="absolute top-full left-0 w-64 bg-background border border-white/10 rounded-xl shadow-xl overflow-hidden p-2 flex flex-col gap-1"
+                                >
+                                    {solutions.map((item) => (
+                                        <Link
+                                            key={item.name}
+                                            href={item.href}
+                                            className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/5 transition-colors group/item"
+                                        >
+                                            <item.icon className={cn("w-5 h-5 group-hover/item:text-neon-blue transition-colors", item.color)} />
+                                            <span className="text-sm font-medium text-white/80 group-hover/item:text-white">{item.name}</span>
+                                        </Link>
+                                    ))}
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </div>
+
+                    <Link href="/#casos" className="text-sm font-medium text-white/70 hover:text-neon-blue transition-colors">
+                        Casos de Éxito
+                    </Link>
+                    <Link href="/#precios" className="text-sm font-medium text-white/70 hover:text-neon-blue transition-colors">
+                        Precios
+                    </Link>
                 </nav>
 
                 {/* CTA */}
@@ -62,27 +100,50 @@ export default function Navbar() {
             </div>
 
             {/* Mobile Menu */}
-            {isOpen && (
-                <motion.div
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="md:hidden absolute top-full left-0 right-0 bg-background border-b border-white/10 p-6 flex flex-col gap-4 shadow-xl"
-                >
-                    {["Plataforma", "Servicios Web", "Casos de Éxito"].map((item) => (
+            <AnimatePresence>
+                {isOpen && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        className="md:hidden absolute top-full left-0 right-0 bg-background border-b border-white/10 p-6 flex flex-col gap-4 shadow-xl max-h-[80vh] overflow-y-auto"
+                    >
+                        <div className="flex flex-col gap-2 border-b border-white/10 pb-4">
+                            <span className="text-xs font-bold text-white/40 uppercase tracking-widest px-2">Soluciones</span>
+                            {solutions.map((item) => (
+                                <Link
+                                    key={item.name}
+                                    href={item.href}
+                                    className="flex items-center gap-3 px-2 py-3 rounded-lg active:bg-white/5"
+                                    onClick={() => setIsOpen(false)}
+                                >
+                                    <item.icon className={cn("w-5 h-5", item.color)} />
+                                    <span className="text-lg font-medium text-white/80">{item.name}</span>
+                                </Link>
+                            ))}
+                        </div>
+
                         <Link
-                            key={item}
-                            href={`#${item.toLowerCase().replace(/ /g, "-")}`}
-                            className="text-lg font-medium text-white/80 hover:text-neon-blue"
+                            href="/#casos"
+                            className="text-lg font-medium text-white/80 hover:text-neon-blue px-2"
                             onClick={() => setIsOpen(false)}
                         >
-                            {item}
+                            Casos de Éxito
                         </Link>
-                    ))}
-                    <button className="w-full bg-neon-blue text-background py-3 rounded-lg font-bold mt-2">
-                        Demo del Ecosistema
-                    </button>
-                </motion.div>
-            )}
+                        <Link
+                            href="/#precios"
+                            className="text-lg font-medium text-white/80 hover:text-neon-blue px-2"
+                            onClick={() => setIsOpen(false)}
+                        >
+                            Precios
+                        </Link>
+
+                        <button className="w-full bg-neon-blue text-background py-3 rounded-lg font-bold mt-2">
+                            Demo del Ecosistema
+                        </button>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </motion.header>
     );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, Variants } from "framer-motion";
-import { Monitor, Globe, ShoppingBag, Activity, ArrowRight } from "lucide-react";
+import { Monitor, Globe, ShoppingBag, Activity, ArrowRight, Cpu, Sparkles } from "lucide-react";
 import Link from "next/link";
 
 
@@ -47,7 +47,7 @@ export default function HeroSection() {
                         transition={{ delay: 0.2, duration: 0.8 }}
                         className="text-muted-foreground text-lg md:text-xl max-w-xl mb-8"
                     >
-                        Smart POS, E-commerce, Marketplace o Finanzas.
+                        Aumatia OS, Smart POS, Marketplace, Web, Finanzas o Agentes AI.
                         Comienza con uno, conéctalos todos.
                     </motion.p>
 
@@ -68,60 +68,98 @@ export default function HeroSection() {
                 </div>
 
                 {/* Right Column: Floating Modular Grid */}
-                <div className="relative w-full h-[400px] md:h-[500px] flex items-center justify-center">
-                    <div className="grid grid-cols-2 gap-6 w-full max-w-md">
+                <div className="relative w-full py-12 lg:py-0 flex items-center justify-center lg:justify-end">
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 lg:gap-6 w-full max-w-2xl">
 
                         {/* Card 1: POS */}
-                        <motion.div
-                            variants={floatingCard(0)}
-                            animate="animate"
-                            whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(0,240,255,0.2)" }}
-                            className="bg-white/5 border border-white/10 backdrop-blur-md p-6 rounded-3xl flex flex-col items-center justify-center gap-4 aspect-square cursor-pointer group"
-                        >
-                            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center group-hover:from-blue-500/40 group-hover:to-cyan-500/40 transition-all">
-                                <Monitor className="w-8 h-8 text-cyan-400" />
-                            </div>
-                            <span className="font-bold text-white group-hover:text-cyan-400 transition-colors">Smart POS</span>
-                        </motion.div>
+                        <Link href="/solutions/smart-pos" className="block">
+                            <motion.div
+                                variants={floatingCard(0)}
+                                animate="animate"
+                                whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(0,240,255,0.2)" }}
+                                className="bg-white/5 border border-white/10 backdrop-blur-md p-5 rounded-3xl flex flex-col items-center justify-center gap-3 aspect-square group"
+                            >
+                                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center group-hover:from-blue-500/40 group-hover:to-cyan-500/40 transition-all">
+                                    <Monitor className="w-7 h-7 text-cyan-400" />
+                                </div>
+                                <span className="font-bold text-sm text-white group-hover:text-cyan-400 transition-colors">Smart POS</span>
+                            </motion.div>
+                        </Link>
 
                         {/* Card 2: Marketplace */}
-                        <motion.div
-                            variants={floatingCard(1.5)}
-                            animate="animate"
-                            whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(168,85,247,0.2)" }}
-                            className="bg-white/5 border border-white/10 backdrop-blur-md p-6 rounded-3xl flex flex-col items-center justify-center gap-4 aspect-square cursor-pointer mt-12 group"
-                        >
-                            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center group-hover:from-purple-500/40 group-hover:to-pink-500/40 transition-all">
-                                <ShoppingBag className="w-8 h-8 text-purple-400" />
-                            </div>
-                            <span className="font-bold text-white group-hover:text-purple-400 transition-colors">Marketplace</span>
-                        </motion.div>
+                        <Link href="/solutions/marketplace" className="block">
+                            <motion.div
+                                variants={floatingCard(1.5)}
+                                animate="animate"
+                                whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(168,85,247,0.2)" }}
+                                className="bg-white/5 border border-white/10 backdrop-blur-md p-5 rounded-3xl flex flex-col items-center justify-center gap-3 aspect-square group"
+                            >
+                                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center group-hover:from-purple-500/40 group-hover:to-pink-500/40 transition-all">
+                                    <ShoppingBag className="w-7 h-7 text-purple-400" />
+                                </div>
+                                <span className="font-bold text-sm text-white group-hover:text-purple-400 transition-colors">Marketplace</span>
+                            </motion.div>
+                        </Link>
 
-                        {/* Card 3: Web */}
-                        <motion.div
-                            variants={floatingCard(0.5)}
-                            animate="animate"
-                            whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(249,115,22,0.2)" }}
-                            className="bg-white/5 border border-white/10 backdrop-blur-md p-6 rounded-3xl flex flex-col items-center justify-center gap-4 aspect-square cursor-pointer lg:-mt-12 group"
-                        >
-                            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-500/20 to-red-500/20 flex items-center justify-center group-hover:from-orange-500/40 group-hover:to-red-500/40 transition-all">
-                                <Globe className="w-8 h-8 text-orange-400" />
-                            </div>
-                            <span className="font-bold text-white group-hover:text-orange-400 transition-colors">Tu Web</span>
-                        </motion.div>
+                        {/* Card 3: OS */}
+                        <Link href="/os" className="block">
+                            <motion.div
+                                variants={floatingCard(0.8)}
+                                animate="animate"
+                                whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(0,255,255,0.3)" }}
+                                className="bg-white/5 border border-cyan-500/30 backdrop-blur-md p-5 rounded-3xl flex flex-col items-center justify-center gap-3 aspect-square group"
+                            >
+                                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center group-hover:from-cyan-500/40 group-hover:to-blue-500/40 transition-all">
+                                    <Cpu className="w-7 h-7 text-cyan-300" />
+                                </div>
+                                <span className="font-black text-sm text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">Aumatia OS</span>
+                            </motion.div>
+                        </Link>
 
-                        {/* Card 4: Finances */}
-                        <motion.div
-                            variants={floatingCard(2)}
-                            animate="animate"
-                            whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(34,197,94,0.2)" }}
-                            className="bg-white/5 border border-white/10 backdrop-blur-md p-6 rounded-3xl flex flex-col items-center justify-center gap-4 aspect-square cursor-pointer group"
-                        >
-                            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-500/20 to-emerald-500/20 flex items-center justify-center group-hover:from-green-500/40 group-hover:to-emerald-500/40 transition-all">
-                                <Activity className="w-8 h-8 text-green-400" />
-                            </div>
-                            <span className="font-bold text-white group-hover:text-green-400 transition-colors">Finanzas</span>
-                        </motion.div>
+                        {/* Card 4: Web */}
+                        <Link href="/solutions/web-development" className="block">
+                            <motion.div
+                                variants={floatingCard(0.5)}
+                                animate="animate"
+                                whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(249,115,22,0.2)" }}
+                                className="bg-white/5 border border-white/10 backdrop-blur-md p-5 rounded-3xl flex flex-col items-center justify-center gap-3 aspect-square group"
+                            >
+                                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-500/20 to-red-500/20 flex items-center justify-center group-hover:from-orange-500/40 group-hover:to-red-500/40 transition-all">
+                                    <Globe className="w-7 h-7 text-orange-400" />
+                                </div>
+                                <span className="font-bold text-sm text-white group-hover:text-orange-400 transition-colors">Tu Web</span>
+                            </motion.div>
+                        </Link>
+
+                        {/* Card 5: Finances */}
+                        <Link href="/solutions/finances" className="block">
+                            <motion.div
+                                variants={floatingCard(2)}
+                                animate="animate"
+                                whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(34,197,94,0.2)" }}
+                                className="bg-white/5 border border-white/10 backdrop-blur-md p-5 rounded-3xl flex flex-col items-center justify-center gap-3 aspect-square group"
+                            >
+                                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-green-500/20 to-emerald-500/20 flex items-center justify-center group-hover:from-green-500/40 group-hover:to-emerald-500/40 transition-all">
+                                    <Activity className="w-7 h-7 text-green-400" />
+                                </div>
+                                <span className="font-bold text-sm text-white group-hover:text-green-400 transition-colors">Finanzas</span>
+                            </motion.div>
+                        </Link>
+
+                        {/* Card 6: AI Agents */}
+                        <Link href="/solutions/agentes" className="block">
+                            <motion.div
+                                variants={floatingCard(1.2)}
+                                animate="animate"
+                                whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(236,72,153,0.3)" }}
+                                className="bg-white/5 border border-fuchsia-500/30 backdrop-blur-md p-5 rounded-3xl flex flex-col items-center justify-center gap-3 aspect-square group"
+                            >
+                                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-fuchsia-500/20 to-pink-500/20 flex items-center justify-center group-hover:from-fuchsia-500/40 group-hover:to-pink-500/40 transition-all">
+                                    <Sparkles className="w-7 h-7 text-fuchsia-400" />
+                                </div>
+                                <span className="font-bold text-sm text-white group-hover:text-fuchsia-400 transition-colors">Agentes AI</span>
+                            </motion.div>
+                        </Link>
 
                     </div>
                 </div>

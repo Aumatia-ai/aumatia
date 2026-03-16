@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import SolutionHero from "@/components/SolutionHero";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/TrustFooter";
-import AddOnsSection from "@/components/AddOnsSection";
+import ProductPricing from "@/components/pricing/ProductPricing";
 import { Monitor, Check } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -46,7 +46,7 @@ export default function SmartPOSPage() {
                 </div>
             </section>
 
-            <AddOnsSection />
+            <ProductPricing producto="smart-pos" />
 
             <Footer />
         </main>

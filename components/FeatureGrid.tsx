@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { CreditCard, ShoppingCart, Activity, Code, ArrowRight } from "lucide-react";
+import { CreditCard, ShoppingCart, Activity, Code, ArrowRight, Cpu, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const features = [
@@ -10,14 +10,14 @@ const features = [
         title: "Smart POS",
         description: "Facturación electrónica y control de stock físico. Independiente y potente.",
         icon: CreditCard,
-        className: "md:col-span-2",
+        className: "md:col-span-1",
         color: "from-blue-500/20 to-cyan-500/20",
         border: "group-hover:border-cyan-500/50",
         href: "/solutions/smart-pos"
     },
     {
         title: "Marketplace",
-        description: "Vende en Mercado Libre y Falabella desde un solo lugar.",
+        description: "Vende en múltiples marketplaces y canales digitales desde un solo lugar.",
         icon: ShoppingCart,
         className: "md:col-span-1",
         color: "from-purple-500/20 to-pink-500/20",
@@ -37,10 +37,28 @@ const features = [
         title: "Web & E-commerce",
         description: "Tu tienda online sincronizada o independiente.",
         icon: Code,
-        className: "md:col-span-2",
+        className: "md:col-span-1",
         color: "from-orange-500/20 to-red-500/20",
         border: "group-hover:border-orange-500/50",
         href: "/solutions/web-development"
+    },
+    {
+        title: "Aumatia OS",
+        description: "El Sistema Operativo de aceleración de ventas impulsado por IA.",
+        icon: Cpu,
+        className: "md:col-span-1",
+        color: "from-cyan-500/20 to-blue-500/20",
+        border: "group-hover:border-cyan-500/50",
+        href: "/os"
+    },
+    {
+        title: "Agentes AI",
+        description: "Empleados virtuales que trabajan 24/7 en WhatsApp o tu Web automatizando ventas.",
+        icon: Sparkles,
+        className: "md:col-span-1",
+        color: "from-fuchsia-500/20 to-pink-500/20",
+        border: "group-hover:border-fuchsia-500/50",
+        href: "/solutions/agentes"
     },
 ];
 
@@ -50,10 +68,10 @@ export default function FeatureGrid() {
             <div className="container mx-auto max-w-6xl">
                 <div className="mb-12 text-center">
                     <h2 className="text-3xl md:text-4xl font-bold mb-4">Elige tu solución</h2>
-                    <p className="text-muted-foreground">4 Herramientas independientes. Un ecosistema opcional.</p>
+                    <p className="text-muted-foreground">Herramientas independientes o unificadas en nuestro sistema operativo impulsado por IA.</p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[300px]">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[300px]">
                     {features.map((feature, i) => (
                         <Link
                             key={i}

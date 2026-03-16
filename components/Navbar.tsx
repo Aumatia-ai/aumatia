@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ChevronDown, Monitor, ShoppingBag, Activity, Code } from "lucide-react";
+import { Menu, X, ChevronDown, Monitor, ShoppingBag, Activity, Code, Cpu, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const solutions = [
@@ -11,6 +11,8 @@ const solutions = [
     { name: "Marketplaces", href: "/solutions/marketplace", icon: ShoppingBag, color: "text-purple-400" },
     { name: "Finanzas", href: "/solutions/finances", icon: Activity, color: "text-green-400" },
     { name: "Web & E-commerce", href: "/solutions/web-development", icon: Code, color: "text-orange-400" },
+    { name: "Agentes AI", href: "/solutions/agentes", icon: Sparkles, color: "text-fuchsia-400" },
+    { name: "Aumatia OS", href: "/os", icon: Cpu, color: "text-cyan-400" },
 ];
 
 export default function Navbar() {
@@ -36,8 +38,8 @@ export default function Navbar() {
             )}
         >
             <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-                <Link href="/" className="text-2xl font-bold tracking-tighter text-white">
-                    Aumatia<span className="text-neon-blue">.</span>
+                <Link href="/" className="flex items-center">
+                    <img src="/logo.png" alt="Aumatia" className="h-10 md:h-12 w-auto object-contain" />
                 </Link>
 
                 {/* Desktop Nav */}
@@ -75,19 +77,19 @@ export default function Navbar() {
                         </AnimatePresence>
                     </div>
 
-                    <Link href="/#casos" className="text-sm font-medium text-white/70 hover:text-neon-blue transition-colors">
-                        Casos de Éxito
-                    </Link>
-                    <Link href="/#precios" className="text-sm font-medium text-white/70 hover:text-neon-blue transition-colors">
+                    <Link href="/precios" className="text-sm font-medium text-white/70 hover:text-neon-blue transition-colors">
                         Precios
                     </Link>
                 </nav>
 
                 {/* CTA */}
                 <div className="hidden md:block">
-                    <button className="bg-neon-blue/10 border border-neon-blue/50 text-neon-blue px-6 py-2 rounded-full text-sm font-semibold hover:bg-neon-blue hover:text-background transition-all shadow-[0_0_15px_rgba(0,240,255,0.15)] hover:shadow-[0_0_25px_rgba(0,240,255,0.4)]">
-                        Demo del Ecosistema
-                    </button>
+                    <Link 
+                        href="/demo"
+                        className="inline-block bg-neon-blue/10 border border-neon-blue/50 text-neon-blue px-6 py-2 rounded-full text-sm font-semibold hover:bg-neon-blue hover:text-background transition-all shadow-[0_0_15px_rgba(0,240,255,0.15)] hover:shadow-[0_0_25px_rgba(0,240,255,0.4)]"
+                    >
+                        Demo
+                    </Link>
                 </div>
 
                 {/* Mobile Menu Toggle */}
@@ -124,23 +126,20 @@ export default function Navbar() {
                         </div>
 
                         <Link
-                            href="/#casos"
-                            className="text-lg font-medium text-white/80 hover:text-neon-blue px-2"
-                            onClick={() => setIsOpen(false)}
-                        >
-                            Casos de Éxito
-                        </Link>
-                        <Link
-                            href="/#precios"
+                            href="/precios"
                             className="text-lg font-medium text-white/80 hover:text-neon-blue px-2"
                             onClick={() => setIsOpen(false)}
                         >
                             Precios
                         </Link>
 
-                        <button className="w-full bg-neon-blue text-background py-3 rounded-lg font-bold mt-2">
-                            Demo del Ecosistema
-                        </button>
+                        <Link 
+                            href="/demo"
+                            className="w-full text-center bg-neon-blue text-background py-3 rounded-lg font-bold mt-2"
+                            onClick={() => setIsOpen(false)}
+                        >
+                            Demo
+                        </Link>
                     </motion.div>
                 )}
             </AnimatePresence>

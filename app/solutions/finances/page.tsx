@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import SolutionHero from "@/components/SolutionHero";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/TrustFooter";
+import ProductPricing from "@/components/pricing/ProductPricing";
 import { Activity } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -61,6 +62,8 @@ export default function FinancesPage() {
                     </div>
                 </div>
             </section>
+
+            <ProductPricing producto="finanzas" />
 
             <Footer />
         </main>

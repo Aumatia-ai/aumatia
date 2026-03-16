@@ -12,16 +12,17 @@ export default function Footer() {
                         {/* Text placeholders for logos as per requirements, normally would be SVGs */}
                         <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-500">Siigo</span>
                         <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">DIAN</span>
-                        <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-yellow-600">MercadoLibre</span>
+                        <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-yellow-600">Mercado Libre</span>
                         <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-lime-500">Falabella</span>
+                        <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-red-600">VTEX</span>
                     </div>
                 </div>
 
                 {/* Footer Links */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
                     <div className="md:col-span-1">
-                        <Link href="/" className="text-2xl font-bold tracking-tighter text-white mb-4 block">
-                            Aumatia<span className="text-neon-blue">.</span>
+                        <Link href="/" className="mb-4 block">
+                            <img src="/logo.png" alt="Aumatia" className="h-10 md:h-12 w-auto object-contain" />
                         </Link>
                         <p className="text-white/40 text-sm">
                             El ecosistema modular para negocios modernos. Conecta solo lo que necesitas.
@@ -60,7 +61,7 @@ export default function Footer() {
                     <div className="flex flex-col gap-2">
                         <p className="text-white/40 text-sm">© 2026 Aumatia. Todos los derechos reservados.</p>
                         <p className="text-white/20 text-xs max-w-xl">
-                            Aumatia es una plataforma independiente. Las marcas comerciales (Siigo, Mercado Libre, DIAN) pertenecen a sus respectivos dueños y se mencionan solo con fines de compatibilidad.
+                            Aumatia es una plataforma independiente. Las marcas comerciales (Siigo, Mercado Libre, Falabella, VTEX, DIAN) pertenecen a sus respectivos dueños y se mencionan solo con fines de compatibilidad e integración.
                         </p>
                     </div>
 

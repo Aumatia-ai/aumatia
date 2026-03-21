@@ -19,7 +19,7 @@ export default function Footer() {
                 </div>
 
                 {/* Footer Links */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
                     <div className="md:col-span-1">
                         <Link href="/" className="mb-4 block">
                             <img src="/logo.png" alt="Aumatia" className="h-10 md:h-12 w-auto object-contain" />
@@ -30,20 +30,9 @@ export default function Footer() {
                     </div>
 
                     <div>
-                        <h4 className="font-bold text-white mb-6">Soluciones</h4>
-                        <ul className="space-y-4">
-                            <li><Link href="/solutions/smart-pos" className="text-white/60 hover:text-neon-blue transition-colors text-sm">Smart POS</Link></li>
-                            <li><Link href="/solutions/marketplace" className="text-white/60 hover:text-neon-blue transition-colors text-sm">Marketplace</Link></li>
-                            <li><Link href="/solutions/finances" className="text-white/60 hover:text-neon-blue transition-colors text-sm">Finanzas</Link></li>
-                            <li><Link href="/solutions/web-development" className="text-white/60 hover:text-neon-blue transition-colors text-sm">Web & E-commerce</Link></li>
-                        </ul>
-                    </div>
-
-                    <div>
                         <h4 className="font-bold text-white mb-6">Compañía</h4>
                         <ul className="space-y-4">
-                            <li><Link href="/#casos" className="text-white/60 hover:text-neon-blue transition-colors text-sm">Casos de Éxito</Link></li>
-                            <li><Link href="/#precios" className="text-white/60 hover:text-neon-blue transition-colors text-sm">Precios</Link></li>
+                            <li><Link href="/about" className="text-white/60 hover:text-neon-blue transition-colors text-sm">Quiénes Somos</Link></li>
                         </ul>
                     </div>
 
@@ -52,6 +41,9 @@ export default function Footer() {
                         <ul className="space-y-4">
                             <li><Link href="/legal/privacy-policy" className="text-white/60 hover:text-neon-blue transition-colors text-sm">Política de Privacidad</Link></li>
                             <li><Link href="/legal/terms-conditions" className="text-white/60 hover:text-neon-blue transition-colors text-sm">Términos y Condiciones</Link></li>
+                            <li><Link href="/legal/aup" className="text-white/60 hover:text-neon-blue transition-colors text-sm">Política de Uso Aceptable (AUP)</Link></li>
+                            <li><Link href="/legal/sla" className="text-white/60 hover:text-neon-blue transition-colors text-sm">Acuerdo SLA</Link></li>
+                            <li><Link href="/legal/dpa" className="text-white/60 hover:text-neon-blue transition-colors text-sm">Procesamiento de Datos (DPA)</Link></li>
                         </ul>
                     </div>
                 </div>

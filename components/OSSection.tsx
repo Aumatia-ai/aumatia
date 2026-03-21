@@ -65,12 +65,19 @@ export default function OSSection() {
               ))}
             </div>
 
-            <div className="pt-8">
+            <div className="pt-8 flex flex-col sm:flex-row gap-4">
               <Link 
                 href="/os" 
-                className="inline-flex items-center gap-2 px-8 py-4 bg-white text-black font-black rounded-full hover:bg-cyan-400 transition-all group"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-black font-black rounded-full hover:bg-cyan-400 transition-all group"
               >
                 Conocer Aumatia OS
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+              <Link 
+                href="/precios-os" 
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/5 border border-white/20 text-white font-black rounded-full hover:border-cyan-400 hover:text-cyan-400 transition-all group"
+              >
+                Ver calculadora de costos por País
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>

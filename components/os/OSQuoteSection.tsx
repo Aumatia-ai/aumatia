@@ -8,8 +8,8 @@ export default function OSQuoteSection() {
                 <div
                     className="mb-16"
                 >
-                    <p className="text-3xl md:text-4xl lg:text-5xl italic font-light text-white/90 leading-snug">
-                        "Aumatia OS fusiona Bases de Datos B2B, Gestión de CRM y Telefonía VoIP en una sola plataforma económica."
+                    <p className="text-3xl md:text-4xl lg:text-5xl font-light text-white/90 leading-snug">
+                        Descubre la infraestructura ideal para tu negocio y <span className="text-neon-blue font-semibold">calcula los costos integrales</span> para tu país.
                     </p>
                 </div>
                 

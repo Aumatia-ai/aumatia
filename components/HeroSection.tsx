@@ -34,7 +34,7 @@ export default function HeroSection() {
                         transition={{ duration: 0.8 }}
                         className="text-5xl md:text-7xl font-bold tracking-tighter mb-6"
                     >
-                        Tu comercio, <br />
+                        Tu empresa, <br />
                         pieza a pieza. <br />
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-blue to-neon-purple">
                             Tú eliges.

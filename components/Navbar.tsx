@@ -12,7 +12,7 @@ const solutions = [
     { name: "Finanzas", href: "/solutions/finances", icon: Activity, color: "text-green-400" },
     { name: "Web & E-commerce", href: "/solutions/web-development", icon: Code, color: "text-orange-400" },
     { name: "Agentes AI", href: "/solutions/agentes", icon: Sparkles, color: "text-fuchsia-400" },
-    { name: "Aumatia OS", href: "/os", icon: Cpu, color: "text-cyan-400" },
+    { name: "ContactIA", href: "/contactia", icon: Cpu, color: "text-cyan-400" },
 ];
 
 export default function Navbar() {
@@ -80,10 +80,19 @@ export default function Navbar() {
                     <Link href="/precios" className="text-sm font-medium text-white/70 hover:text-neon-blue transition-colors">
                         Precios
                     </Link>
+                    <Link href="/os" className="text-sm font-medium text-cyan-400 hover:text-cyan-300 transition-colors border border-cyan-500/30 px-3 py-1 rounded-full bg-cyan-500/10">
+                        Aumatia OS
+                    </Link>
                 </nav>
 
                 {/* CTA */}
-                <div className="hidden md:block">
+                <div className="hidden md:flex items-center gap-4">
+                    <Link 
+                        href="/login"
+                        className="text-sm font-medium text-white/70 hover:text-white transition-colors"
+                    >
+                        Iniciar Sesión
+                    </Link>
                     <Link 
                         href="/demo"
                         className="inline-block bg-neon-blue/10 border border-neon-blue/50 text-neon-blue px-6 py-2 rounded-full text-sm font-semibold hover:bg-neon-blue hover:text-background transition-all shadow-[0_0_15px_rgba(0,240,255,0.15)] hover:shadow-[0_0_25px_rgba(0,240,255,0.4)]"
@@ -132,14 +141,32 @@ export default function Navbar() {
                         >
                             Precios
                         </Link>
-
-                        <Link 
-                            href="/demo"
-                            className="w-full text-center bg-neon-blue text-background py-3 rounded-lg font-bold mt-2"
+                        
+                        <Link
+                            href="/os"
+                            className="text-lg font-medium text-cyan-400 hover:text-cyan-300 px-2"
                             onClick={() => setIsOpen(false)}
                         >
-                            Demo
+                            Aumatia OS
                         </Link>
+
+                        <div className="flex flex-col gap-3 mt-2 border-t border-white/10 pt-4">
+                            <Link 
+                                href="/login"
+                                className="w-full text-center border border-white/20 text-white hover:bg-white/5 py-3 rounded-lg font-bold transition-colors"
+                                onClick={() => setIsOpen(false)}
+                            >
+                                Iniciar Sesión
+                            </Link>
+
+                            <Link 
+                                href="/demo"
+                                className="w-full text-center bg-neon-blue text-background py-3 rounded-lg font-bold"
+                                onClick={() => setIsOpen(false)}
+                            >
+                                Demo
+                            </Link>
+                        </div>
                     </motion.div>
                 )}
             </AnimatePresence>

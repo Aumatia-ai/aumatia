@@ -6,8 +6,8 @@ import Link from "next/link";
 
 const osFeatures = [
   {
-    title: "Cerebro Central",
-    desc: "Unifica inventario, ventas y clientes en un solo flujo inteligente.",
+    title: "Agente Omnicanal",
+    desc: "Unifica tus conversaciones de WhatsApp, Web y Redes en un solo flujo.",
     icon: Cpu
   },
   {
@@ -22,7 +22,7 @@ const osFeatures = [
   }
 ];
 
-export default function OSSection() {
+export default function ContactIASection() {
   return (
     <section className="py-24 relative overflow-hidden bg-black">
       {/* Glow effects */}
@@ -40,9 +40,9 @@ export default function OSSection() {
             </div>
             
             <h2 className="text-4xl md:text-5xl font-black text-white leading-tight">
-              Aumatia OS: El motor de <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
-                Aceleración para tu Negocio
+              ContactIA: El motor de <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 to-pink-500">
+                Atención para tu Negocio
               </span>
             </h2>
             
@@ -67,10 +67,10 @@ export default function OSSection() {
 
             <div className="pt-8 flex flex-col sm:flex-row gap-4">
               <Link 
-                href="/os" 
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-black font-black rounded-full hover:bg-cyan-400 transition-all group"
+                href="/contactia" 
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-black font-black rounded-full hover:bg-fuchsia-400 transition-all group"
               >
-                Conocer Aumatia OS
+                Conocer ContactIA
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link 

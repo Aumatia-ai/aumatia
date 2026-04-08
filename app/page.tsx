@@ -3,7 +3,8 @@
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import FeatureGrid from "@/components/FeatureGrid";
-import OSSection from "@/components/OSSection";
+import ContactIASection from "@/components/ContactIASection";
+import AumatiaOSPromo from "@/components/AumatiaOSPromo";
 import SyncSimulation from "@/components/SyncSimulation";
 import TrustFooter from "@/components/TrustFooter";
 
@@ -13,7 +14,8 @@ export default function Home() {
       <Navbar />
       <HeroSection />
       <FeatureGrid />
-      <OSSection />
+      <AumatiaOSPromo />
+      <ContactIASection />
 
       {/* Ecosystem Presentation Section */}
       <section className="py-24 bg-black/50 border-t border-white/5">

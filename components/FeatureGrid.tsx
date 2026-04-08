@@ -43,13 +43,13 @@ const features = [
         href: "/solutions/web-development"
     },
     {
-        title: "Aumatia OS",
-        description: "El Sistema Operativo de aceleración de ventas impulsado por IA.",
+        title: "ContactIA",
+        description: "Plataforma de soporte y centro de contacto omnicanal impulsado por IA.",
         icon: Cpu,
         className: "md:col-span-1",
         color: "from-cyan-500/20 to-blue-500/20",
         border: "group-hover:border-cyan-500/50",
-        href: "/os"
+        href: "/contactia"
     },
     {
         title: "Agentes AI",

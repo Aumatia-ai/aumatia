@@ -39,7 +39,7 @@ export default function OSPricingSection() {
                     Motor de Automatización
                 </div>
                 <h2 className="text-4xl md:text-5xl font-black text-white mb-6">
-                    Aumatia OS
+                    ContactIA
                 </h2>
                 <p className="text-xl text-white/50 max-w-3xl mx-auto mb-8">
                     El cerebro que conecta todo tu ecosistema. Opera a través de un sistema de créditos flexibles 
@@ -47,7 +47,7 @@ export default function OSPricingSection() {
                 </p>
                 <div className="inline-block p-4 rounded-xl bg-white/5 border border-white/10">
                     <p className="text-sm text-white/70">
-                        <strong className="text-fuchsia-400">Nota:</strong> Setup único de configuración de flujos Aumatia OS: 
+                        <strong className="text-fuchsia-400">Nota:</strong> Setup único de configuración de flujos ContactIA: 
                         <strong className="text-white ml-2">$50 USD</strong>
                     </p>
                 </div>

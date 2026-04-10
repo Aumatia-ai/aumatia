@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import { useEffect } from "react";
 import { Store, Utensils, ShoppingCart, MessageSquare, LineChart, Settings, LogOut, Cpu } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -108,7 +108,7 @@ export function Launcher() {
     }
 
     // Framer Motion Spring Animations for the Grid
-    const container = {
+    const container: Variants = {
         hidden: { opacity: 0 },
         show: {
             opacity: 1,
@@ -116,7 +116,7 @@ export function Launcher() {
         }
     };
 
-    const item = {
+    const item: Variants = {
         hidden: { opacity: 0, y: 30, scale: 0.9 },
         show: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 300, damping: 20 } }
     };

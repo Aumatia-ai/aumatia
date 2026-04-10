@@ -12,18 +12,6 @@ export default function HeroSection() {
         setMounted(true);
     }, []);
 
-    const floatingCard = (delay: number): Variants => ({
-        animate: {
-            y: [0, -10, 0],
-            transition: {
-                duration: 4,
-                repeat: Infinity,
-                delay: delay,
-                ease: "easeInOut"
-            }
-        }
-    });
-
     const SnowflakeNode = ({ 
         icon: Icon, 
         title, 
@@ -31,13 +19,26 @@ export default function HeroSection() {
         delay, 
         positionClass, 
         linkHref,
-        glowColor 
+        glowColor,
+        dx,
+        dy
     }: {
-        icon: any; title: string; colorClass: string; delay: number; positionClass: string; linkHref: string; glowColor: string;
+        icon: any; title: string; colorClass: string; delay: number; positionClass: string; linkHref: string; glowColor: string; dx: number; dy: number;
     }) => (
         <Link href={linkHref} className={`absolute ${positionClass} transform -translate-x-1/2 -translate-y-1/2 z-20`}>
             <motion.div
-                variants={floatingCard(delay)}
+                variants={{
+                    animate: {
+                        x: [0, dx, 0],
+                        y: [0, dy, 0],
+                        transition: {
+                            duration: 4,
+                            repeat: Infinity,
+                            delay: delay,
+                            ease: "easeInOut"
+                        }
+                    }
+                }}
                 animate="animate"
                 whileHover={{ scale: 1.1, boxShadow: `0 0 25px ${glowColor}` }}
                 className="bg-[#0b101e]/80 border border-white/10 backdrop-blur-md p-4 md:p-5 rounded-2xl flex flex-col items-center justify-center gap-2 aspect-square w-24 h-24 md:w-32 md:h-32 transition-colors group cursor-pointer"
@@ -144,6 +145,7 @@ export default function HeroSection() {
                         delay={0} 
                         positionClass="top-[10%] left-[50%]" 
                         linkHref="/solutions/smart-pos" 
+                        dx={0} dy={15}
                     />
 
                     <SnowflakeNode 
@@ -154,6 +156,7 @@ export default function HeroSection() {
                         delay={0.5} 
                         positionClass="top-[30%] left-[85%]" 
                         linkHref="/solutions/marketplace" 
+                        dx={-13} dy={7.5}
                     />
 
                     <SnowflakeNode 
@@ -164,6 +167,7 @@ export default function HeroSection() {
                         delay={1.5} 
                         positionClass="top-[70%] left-[85%]" 
                         linkHref="/solutions/finances" 
+                        dx={-13} dy={-7.5}
                     />
 
                     <SnowflakeNode 
@@ -174,6 +178,7 @@ export default function HeroSection() {
                         delay={1} 
                         positionClass="top-[90%] left-[50%]" 
                         linkHref="/contactia" 
+                        dx={0} dy={-15}
                     />
 
                     <SnowflakeNode 
@@ -184,6 +189,7 @@ export default function HeroSection() {
                         delay={2} 
                         positionClass="top-[70%] left-[15%]" 
                         linkHref="/solutions/web-development" 
+                        dx={13} dy={-7.5}
                     />
 
                     <SnowflakeNode 
@@ -194,6 +200,7 @@ export default function HeroSection() {
                         delay={2.5} 
                         positionClass="top-[30%] left-[15%]" 
                         linkHref="/solutions/agentes" 
+                        dx={13} dy={7.5}
                     />
 
                 </div>

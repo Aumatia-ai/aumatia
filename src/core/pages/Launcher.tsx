@@ -41,8 +41,7 @@ export function Launcher() {
 
     if (isNoPlan) {
         return (
-            <div className="w-full min-h-screen bg-[#050b14] flex flex-col items-center justify-center relative overflow-hidden">
-                <SnowflakeBackground />
+            <SnowflakeBackground>
                 <motion.div 
                     initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
                     className="relative z-10 max-w-md w-[90%] text-center p-8 bg-[#0b1221]/80 backdrop-blur-xl border border-white/10 rounded-3xl"
@@ -63,7 +62,7 @@ export function Launcher() {
                         </button>
                     </div>
                 </motion.div>
-            </div>
+            </SnowflakeBackground>
         );
     }
 

@@ -34,6 +34,9 @@ WORKDIR /app
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
 
+# Server Actions (fetchProfileAction, adminUserActions) need this at RUNTIME.
+ENV SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl4b2hocXVvcHBhdG5kenphbHlxIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NTY4NjQ2OCwiZXhwIjoyMDkxMjYyNDY4fQ.0HuoEG5gPvKebI7aFu3kKtfknLAFN9H2SFA6W3BnkZ8
+
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 

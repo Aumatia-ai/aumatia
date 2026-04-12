@@ -27,28 +27,45 @@ export const adminUserService = {
                     tenant_id,
                     role,
                     is_active,
-                    active_modules,
-                    users (
-                        id,
-                        email,
-                        full_name
-                    )
+                    active_modules
                 `);
 
             if (tenantId !== 'master') {
                 query = query.eq('tenant_id', tenantId);
             }
 
-            const { data, error } = await query;
+            const { data: tenantData, error: tenantErr } = await query;
 
-            if (error) {
-                console.error("Error fetching tenant users en Supabase [SELECT]:", error);
-                throw error;
+            if (tenantErr) {
+                console.error("Error fetching tenant users en Supabase [SELECT]:", tenantErr.message, tenantErr.details || tenantErr);
+                throw tenantErr;
             }
 
-            return (data as unknown) as TenantUser[];
-        } catch (err) {
-            console.error("adminUserService.getTenantUsers Critical Exception:", err);
+            if (!tenantData || tenantData.length === 0) {
+                return [];
+            }
+
+            const userIds = tenantData.map(t => t.user_id);
+            const { data: usersData, error: usersErr } = await supabase
+                .from('users_global')
+                .select('id, email, full_name')
+                .in('id', userIds);
+
+            if (usersErr) {
+                 console.warn("No pudimos jalar los perfiles users_global (quizá por RLS):", usersErr.message);
+            }
+
+            const payloadResult = tenantData.map(tu => {
+                const matchedUser = (usersData || []).find(u => u.id === tu.user_id) || { id: tu.user_id, email: "Oculto", full_name: "Oculto" };
+                return {
+                    ...tu,
+                    users: matchedUser
+                };
+            });
+
+            return (payloadResult as unknown) as TenantUser[];
+        } catch (err: any) {
+            console.error("adminUserService.getTenantUsers Critical Exception:", err?.message || err);
             throw err;
         }
     },

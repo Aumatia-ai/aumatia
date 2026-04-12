@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "../lib/supabaseClient";
+import { fetchUserProfileAction } from "./fetchProfileAction";
 import { Session, User } from "@supabase/supabase-js";
 
 export interface UserProfile {
@@ -60,63 +61,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const fetchProfile = async (user: User) => {
         try {
-            // Master Admin Hardcoded Override
-            if (user.email === "admin@aumatia.com.co") {
+            const result = await fetchUserProfileAction(user.id, user.email || '', user.user_metadata);
+            
+            if (result) {
                 setProfile({
                     user,
-                    tenant_id: "master",
-                    tenant_slug: "master",
-                    role: "admin",
-                    industry: "retail",
-                    allowed_modules: ["pos", "marketplace", "finanzas", "contactia", "web"]
-                });
-                setLoading(false);
-                return;
-            }
-
-            const { data: tenantUsers, error } = await supabase
-                .from('tenant_users')
-                .select(`
-                    tenant_id,
-                    role,
-                    tenants ( slug ),
-                    active_modules
-                `)
-                .eq('user_id', user.id)
-                .eq('is_active', true)
-                .maybeSingle();
-
-            if (error) {
-                console.error("AuthContext fetchProfile DB error details:", error.message, error.details, error.hint);
-                setProfile(null);
-            } else if (tenantUsers && tenantUsers.tenants) {
-                const activeMods = tenantUsers.active_modules || {};
-                const allowed_modules = Object.keys(activeMods).filter(k => activeMods[k]);
-                
-                // Add basic default modules if applicable
-                if (!allowed_modules.includes('pos')) Object.keys(activeMods).forEach(k => { if(k === 'retail_pos' || k === 'restaurant_pos') allowed_modules.push('pos') });
-
-                // Infer industry from user metadata or fallback so everything doesn't crash
-                const assignedIndustry = user.user_metadata?.industry || 'retail'; 
-
-                setProfile({
-                    user,
-                    tenant_id: tenantUsers.tenant_id,
-                    tenant_slug: (tenantUsers.tenants as any).slug || 'demo',
-                    role: tenantUsers.role,
-                    industry: assignedIndustry,
-                    allowed_modules
+                    ...result
                 });
             } else {
-                console.warn("AuthContext fetchProfile: No existe este usuario en la tabla 'tenant_users'. Mostrando fallback para suscripciones.");
-                setProfile({
-                    user,
-                    tenant_id: "none",
-                    tenant_slug: "none",
-                    role: "user",
-                    industry: "retail",
-                    allowed_modules: []
-                });
+                console.warn("AuthContext fetchProfile: Server Action returned null for user", user.id);
+                setProfile(null);
             }
         } catch (err) {
             console.error("AuthContext fetchProfile generic exception:", err);

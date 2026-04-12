@@ -4,7 +4,6 @@ import { motion, Variants } from "framer-motion";
 import { useEffect } from "react";
 import { Store, Utensils, ShoppingCart, MessageSquare, LineChart, Settings, LogOut, Cpu } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { SnowflakeBackground } from "../ui/SnowflakeBackground";
 import { useAuth } from "../auth/AuthContext";
 import { supabase } from "../lib/supabaseClient";
 
@@ -41,7 +40,7 @@ export function Launcher() {
 
     if (isNoPlan) {
         return (
-            <SnowflakeBackground>
+            <div className="min-h-screen bg-[#050b14] flex items-center justify-center p-6 relative overflow-hidden">
                 <motion.div 
                     initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
                     className="relative z-10 max-w-md w-[90%] text-center p-8 bg-[#0b1221]/80 backdrop-blur-xl border border-white/10 rounded-3xl"
@@ -62,7 +61,7 @@ export function Launcher() {
                         </button>
                     </div>
                 </motion.div>
-            </SnowflakeBackground>
+            </div>
         );
     }
 
@@ -71,13 +70,25 @@ export function Launcher() {
         ? `http://localhost:3000${basePath}` 
         : `https://${session.tenant_slug}.aumatia.com.co${basePath}`;
 
-    // SSO Synchronization Helper
+    // SSO Synchronization Helper - Hydrating Remote POS
     const handleSSORedirect = async (baseUrl: string) => {
         try {
             const { data } = await supabase.auth.getSession();
             if (data.session) {
-                const queryConnector = baseUrl.includes('?') ? '&' : '?';
-                window.location.href = `${baseUrl}${queryConnector}access_token=${data.session.access_token}&refresh_token=${data.session.refresh_token}`;
+                const url = new URL(baseUrl);
+                
+                // Inject Core Native Auth & Identity
+                url.searchParams.set('access_token', data.session.access_token);
+                url.searchParams.set('refresh_token', data.session.refresh_token);
+                url.searchParams.set('tenant_slug', session.tenant_slug);
+                url.searchParams.set('role', session.role);
+                
+                // Inject Module Permissions Array (Comma separated)
+                if (session.allowed_modules && session.allowed_modules.length > 0) {
+                    url.searchParams.set('modules', session.allowed_modules.join(','));
+                }
+
+                window.location.href = url.toString();
             } else {
                 window.location.href = baseUrl;
             }
@@ -87,23 +98,37 @@ export function Launcher() {
         }
     };
 
-    // Conditional App Rendering Logic based on Role and Industry
+    // Conditional App Rendering Logic based on Permissions
     const apps: any[] = [];
-
-    if (session.industry === 'retail' && session.role !== 'admin') {
-        apps.push({ title: "POS Retail", icon: ShoppingCart, color: "text-blue-400", bgGlow: "rgba(59,130,246,0.3)", action: () => handleSSORedirect("https://pos.aumatia.com.co/auth/sync?industry=retail") });
-    }
-
-    if (session.industry === 'restaurant' && session.role !== 'admin') {
-        apps.push({ title: "POS Restaurante", icon: Utensils, color: "text-orange-400", bgGlow: "rgba(249,115,22,0.3)", action: () => handleSSORedirect("https://pos.aumatia.com.co/auth/sync?industry=restaurant") });
-    }
-
+    
+    // Admins always have access to the Admin Panel
     if (session.role === 'admin') {
         apps.push({ title: "Panel Admin", icon: Settings, color: "text-rose-400", bgGlow: "rgba(244,63,113,0.3)", action: () => router.push("/app/admin") });
-        apps.push({ title: "POS Retail", icon: ShoppingCart, color: "text-blue-400", bgGlow: "rgba(59,130,246,0.3)", action: () => handleSSORedirect("https://pos.aumatia.com.co/auth/sync?industry=retail") });
-        apps.push({ title: "POS Restaurantes", icon: Utensils, color: "text-orange-400", bgGlow: "rgba(249,115,22,0.3)", action: () => handleSSORedirect("https://pos.aumatia.com.co/auth/sync?industry=restaurant") });
+    }
+
+    const hasModule = (modId: string) => session.role === 'admin' || (session.allowed_modules || []).includes(modId);
+    const posUrl = isLocal ? "http://localhost:3001/auth/sync" : "https://pos.aumatia.com.co/auth/sync";
+
+    // POS Retail — only if pos_retail is enabled for this user
+    if (hasModule('pos_retail')) {
+        apps.push({ title: "POS Retail", icon: ShoppingCart, color: "text-blue-400", bgGlow: "rgba(59,130,246,0.3)", action: () => handleSSORedirect(`${posUrl}?industry=retail`) });
+    }
+
+    // POS Restaurant — only if pos_restaurant is enabled for this user
+    if (hasModule('pos_restaurant')) {
+        apps.push({ title: "POS Restaurante", icon: Utensils, color: "text-orange-400", bgGlow: "rgba(249,115,22,0.3)", action: () => handleSSORedirect(`${posUrl}?industry=restaurant`) });
+    }
+
+    // Ecosystem Apps
+    if (hasModule('marketplace')) {
         apps.push({ title: "Marketplace", icon: Store, color: "text-purple-400", bgGlow: "rgba(168,85,247,0.3)", action: () => alert("Módulo en construcción") });
+    }
+    
+    if (hasModule('finanzas')) {
         apps.push({ title: "Finanzas", icon: LineChart, color: "text-green-400", bgGlow: "rgba(34,197,94,0.3)", action: () => alert("Módulo en construcción") });
+    }
+    
+    if (hasModule('contactia')) {
         apps.push({ title: "ContactIA", icon: MessageSquare, color: "text-cyan-400", bgGlow: "rgba(6,182,212,0.3)", action: () => handleSSORedirect("https://os.aumatia.com.co/auth/sync?app=contactia") });
     }
 
@@ -122,7 +147,9 @@ export function Launcher() {
     };
 
     return (
-        <SnowflakeBackground>
+        <div className="min-h-screen bg-[#050b14] relative overflow-hidden">
+            {/* Ambient glow */}
+            <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-cyan-500/[0.03] rounded-full blur-[150px] pointer-events-none" />
             {/* Header del OS */}
             <div className="absolute top-0 left-0 w-full p-6 flex justify-between items-center z-40 border-b border-white/5 bg-background/20 backdrop-blur-md">
                 <div className="flex items-center gap-4">
@@ -205,6 +232,6 @@ export function Launcher() {
                      </motion.div>
                 )}
             </div>
-        </SnowflakeBackground>
+        </div>
     );
 }

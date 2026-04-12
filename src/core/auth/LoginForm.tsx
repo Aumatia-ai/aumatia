@@ -1,11 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Cpu, Lock, Mail, ArrowRight, ShieldCheck } from "lucide-react";
+import { Cpu, Lock, Mail, ArrowRight, ShieldCheck, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { SnowflakeBackground } from "../ui/SnowflakeBackground";
 import { supabase } from "../lib/supabaseClient";
 
 export function LoginForm() {
@@ -13,6 +12,7 @@ export function LoginForm() {
     const [password, setPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [isRegister, setIsRegister] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -63,7 +63,9 @@ export function LoginForm() {
     };
 
     return (
-        <SnowflakeBackground>
+        <div className="min-h-screen bg-[#050b14] flex items-center justify-center p-6 relative overflow-hidden">
+            {/* Ambient glow */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-cyan-500/5 rounded-full blur-[120px] pointer-events-none" />
             <motion.div 
                 initial={{ opacity: 0, scale: 0.95, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -121,13 +123,21 @@ export function LoginForm() {
                             <div className="relative">
                                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
                                 <input 
-                                    type="password" 
+                                    type={showPassword ? "text" : "password"} 
                                     required
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     placeholder="••••••••••••"
-                                    className="w-full bg-[#050b14]/60 border border-white/10 rounded-xl py-4 pl-12 pr-4 text-white placeholder:text-white/20 focus:outline-none focus:border-cyan-500/60 focus:ring-1 focus:ring-cyan-500/60 transition-all font-medium hover:border-white/20"
+                                    className="w-full bg-[#050b14]/60 border border-white/10 rounded-xl py-4 pl-12 pr-12 text-white placeholder:text-white/20 focus:outline-none focus:border-cyan-500/60 focus:ring-1 focus:ring-cyan-500/60 transition-all font-medium hover:border-white/20"
                                 />
+                                <button 
+                                    type="button" 
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70 transition-colors"
+                                    tabIndex={-1}
+                                >
+                                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                                </button>
                             </div>
                         </div>
 
@@ -165,6 +175,6 @@ export function LoginForm() {
                     </div>
                 </div>
             </motion.div>
-        </SnowflakeBackground>
+        </div>
     );
 }

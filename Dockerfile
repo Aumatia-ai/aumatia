@@ -17,13 +17,12 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED 1
 
 # Next.js inlines NEXT_PUBLIC_* variables at build time.
-# These MUST be available during `npm run build` or they become undefined.
-ARG NEXT_PUBLIC_SUPABASE_URL
-ARG NEXT_PUBLIC_SUPABASE_ANON_KEY
-ARG SUPABASE_SERVICE_ROLE_KEY
+# These are public (exposed to the browser), so hardcoding is safe.
+ENV NEXT_PUBLIC_SUPABASE_URL=https://yxohhquoppatndzzalyq.supabase.co
+ENV NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl4b2hocXVvcHBhdG5kenphbHlxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2ODY0NjgsImV4cCI6MjA5MTI2MjQ2OH0.O_mXgxEp2F7t58e617lupqhZfiJuGEeEUfkAN7tHwGI
 
-ENV NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL
-ENV NEXT_PUBLIC_SUPABASE_ANON_KEY=$NEXT_PUBLIC_SUPABASE_ANON_KEY
+# Service Role Key is a SECRET — passed at build time, never hardcoded.
+ARG SUPABASE_SERVICE_ROLE_KEY
 ENV SUPABASE_SERVICE_ROLE_KEY=$SUPABASE_SERVICE_ROLE_KEY
 
 RUN npm run build

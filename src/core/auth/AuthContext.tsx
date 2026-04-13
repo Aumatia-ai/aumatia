@@ -7,8 +7,13 @@ import { Session, User } from "@supabase/supabase-js";
 
 export interface UserProfile {
     user: User;
-    tenant_slug: string;
-    tenant_id: string;
+    id: string; // The user ID itself acts as the tenant ID
+    nombre: string | null;
+    telefono: string | null;
+    brand_name: string | null;
+    logourl: string | null;
+    primary_color: string | null;
+    secondary_color: string | null;
     role: string;
     industry: string;
     allowed_modules: string[];
@@ -18,9 +23,15 @@ interface AuthState {
     session: Session | null;
     profile: UserProfile | null;
     loading: boolean;
+    setProfileInternal: (profile: UserProfile | null) => void;
 }
 
-const AuthContext = createContext<AuthState>({ session: null, profile: null, loading: true });
+const AuthContext = createContext<AuthState>({ 
+    session: null, 
+    profile: null, 
+    loading: true,
+    setProfileInternal: () => {} 
+});
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [session, setSession] = useState<Session | null>(null);
@@ -81,7 +92,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ session, profile, loading }}>
+        <AuthContext.Provider value={{ session, profile, loading, setProfileInternal: setProfile }}>
             {children}
         </AuthContext.Provider>
     );

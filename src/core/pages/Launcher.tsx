@@ -1,15 +1,52 @@
 "use client";
 
 import { motion, Variants } from "framer-motion";
-import { useEffect } from "react";
-import { Store, Utensils, ShoppingCart, MessageSquare, LineChart, Settings, LogOut, Cpu } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Store, Utensils, ShoppingCart, MessageSquare, LineChart, Settings, LogOut, Cpu, Paintbrush, Save, X, Image as ImageIcon, Upload } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../auth/AuthContext";
 import { supabase } from "../lib/supabaseClient";
+import { uploadLogoAction } from "../auth/storageBucketAction";
 
 export function Launcher() {
-    const { profile, loading } = useAuth();
+    const { profile, loading, setProfileInternal } = useAuth();
     const router = useRouter();
+
+    const [showBrandModal, setShowBrandModal] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
+    const [isUploading, setIsUploading] = useState(false);
+    const [brandForm, setBrandForm] = useState({
+        brand_name: "",
+        logourl: "",
+        primary_color: "",
+        secondary_color: ""
+    });
+
+    const handleLogoUpload = async (file: File) => {
+        if (!profile) return;
+        setIsUploading(true);
+        try {
+            // Convert file to base64 for server action
+            const arrayBuffer = await file.arrayBuffer();
+            const base64 = Buffer.from(arrayBuffer).toString('base64');
+
+            const result = await uploadLogoAction({
+                userId: profile.id,
+                fileName: file.name,
+                fileBase64: base64,
+                contentType: file.type
+            });
+
+            if (!result.success) throw new Error(result.error);
+
+            setBrandForm(prev => ({ ...prev, logourl: result.publicUrl || "" }));
+        } catch (err: any) {
+            console.error("Logo upload error:", err);
+            alert("Error al subir el logo: " + err.message);
+        } finally {
+            setIsUploading(false);
+        }
+    };
 
     const handleLogout = async () => {
         await supabase.auth.signOut();
@@ -19,10 +56,50 @@ export function Launcher() {
     useEffect(() => {
         if (!loading && !profile) {
             router.push("/login");
+        } else if (profile) {
+            setBrandForm({
+                brand_name: profile.brand_name || "",
+                logourl: profile.logourl || "",
+                primary_color: profile.primary_color || "#050b14",
+                secondary_color: profile.secondary_color || "#06b6d4"
+            });
         }
     }, [loading, profile, router]);
 
-    if (loading) {
+    const handleSaveBrand = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!profile) return;
+        setIsSaving(true);
+        try {
+            const { error } = await supabase
+                .from('usuarios')
+                .update({
+                    brand_name: brandForm.brand_name,
+                    logourl: brandForm.logourl,
+                    primary_color: brandForm.primary_color,
+                    secondary_color: brandForm.secondary_color
+                })
+                .eq('id', profile.id);
+            
+            if (error) {
+                throw error;
+            }
+
+            setProfileInternal({
+                ...profile,
+                ...brandForm
+            });
+            setShowBrandModal(false);
+            alert("Marca actualizada con éxito.");
+        } catch (err: any) {
+            console.error("Error updating brand:", err);
+            alert("No se pudieron guardar los cambios: " + err.message);
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
+    if (loading || !profile) {
         return (
             <div className="min-h-screen bg-[#050b14] flex items-center justify-center">
                 <div className="w-10 h-10 rounded-full border-t-2 border-cyan-500 animate-spin" />
@@ -30,109 +107,41 @@ export function Launcher() {
         );
     }
 
-    if (!profile) {
-        return null;
-    }
+    const session = profile; 
 
-    const session = profile; // Alias to preserve downstream variable references
+    // Pure SaaS Link directly to the domain
+    const posUrl = "https://pos.aumatia.com.co";
+    const osUrl = "https://os.aumatia.com.co";
 
-    const isNoPlan = session.tenant_id === "none" || session.tenant_slug === "system";
-
-    if (isNoPlan) {
-        return (
-            <div className="min-h-screen bg-[#050b14] flex items-center justify-center p-6 relative overflow-hidden">
-                <motion.div 
-                    initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                    className="relative z-10 max-w-md w-[90%] text-center p-8 bg-[#0b1221]/80 backdrop-blur-xl border border-white/10 rounded-3xl"
-                >
-                    <div className="w-16 h-16 mx-auto bg-gradient-to-br from-cyan-500/20 to-blue-500/20 rounded-2xl flex items-center justify-center border border-cyan-500/30 mb-6 shadow-[0_0_30px_rgba(0,255,255,0.15)]">
-                        <Store className="w-8 h-8 text-cyan-400" />
-                    </div>
-                    <h2 className="text-2xl font-bold text-white mb-3">No tienes un plan activo</h2>
-                    <p className="text-white/50 text-sm mb-8 leading-relaxed">
-                        Acabas de crear tu cuenta, pero aún no has adquirido un plan ni fuiste asignado a un tenant. Adquiere un plan para desbloquear tu ecosistema empresarial.
-                    </p>
-                    <div className="flex flex-col gap-3">
-                        <button className="w-full py-3.5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white rounded-xl font-bold shadow-[0_0_20px_rgba(0,180,255,0.3)] transition-all">
-                            Adquirir Plan
-                        </button>
-                        <button onClick={handleLogout} className="w-full py-3.5 bg-white/5 hover:bg-white/10 text-white/70 rounded-xl font-semibold transition-all border border-white/5">
-                            Cerrar Sesión
-                        </button>
-                    </div>
-                </motion.div>
-            </div>
-        );
-    }
-
-    const isLocal = typeof window !== 'undefined' && window.location.hostname.includes('localhost');
-    const getTargetUrl = (basePath: string) => isLocal 
-        ? `http://localhost:3000${basePath}` 
-        : `https://${session.tenant_slug}.aumatia.com.co${basePath}`;
-
-    // SSO Synchronization Helper - Hydrating Remote POS
-    const handleSSORedirect = async (baseUrl: string) => {
-        try {
-            const { data } = await supabase.auth.getSession();
-            if (data.session) {
-                const url = new URL(baseUrl);
-                
-                // Inject Core Native Auth & Identity
-                url.searchParams.set('access_token', data.session.access_token);
-                url.searchParams.set('refresh_token', data.session.refresh_token);
-                url.searchParams.set('tenant_slug', session.tenant_slug);
-                url.searchParams.set('role', session.role);
-                
-                // Inject Module Permissions Array (Comma separated)
-                if (session.allowed_modules && session.allowed_modules.length > 0) {
-                    url.searchParams.set('modules', session.allowed_modules.join(','));
-                }
-
-                window.location.href = url.toString();
-            } else {
-                window.location.href = baseUrl;
-            }
-        } catch (err) {
-            console.error("Error generating SSO sync URL:", err);
-            window.location.href = baseUrl;
-        }
+    const handleAppLaunch = (url: string) => {
+        window.open(url, '_blank');
     };
 
-    // Conditional App Rendering Logic based on Permissions
     const apps: any[] = [];
     
-    // Admins always have access to the Admin Panel
+    // Personalizar Marca: siempre disponible para todos los usuarios, siempre primero
+    apps.push({ title: "Personalizar Marca", icon: Paintbrush, color: "text-cyan-400", bgGlow: "rgba(6,182,212,0.3)", action: () => setShowBrandModal(true) });
+
+    // Panel Admin: solo para usuarios con role 'admin'
     if (session.role === 'admin') {
         apps.push({ title: "Panel Admin", icon: Settings, color: "text-rose-400", bgGlow: "rgba(244,63,113,0.3)", action: () => router.push("/app/admin") });
     }
 
-    const hasModule = (modId: string) => session.role === 'admin' || (session.allowed_modules || []).includes(modId);
-    const posUrl = isLocal ? "http://localhost:3001/auth/sync" : "https://pos.aumatia.com.co/auth/sync";
+    // POS unificado (antes eran pos_retail y pos_restaurant separados)
+    apps.push({ title: "POS", icon: ShoppingCart, color: "text-blue-400", bgGlow: "rgba(59,130,246,0.3)", action: () => handleAppLaunch(posUrl) });
 
-    // POS Retail — only if pos_retail is enabled for this user
-    if (hasModule('pos_retail')) {
-        apps.push({ title: "POS Retail", icon: ShoppingCart, color: "text-blue-400", bgGlow: "rgba(59,130,246,0.3)", action: () => handleSSORedirect(`${posUrl}?industry=retail`) });
-    }
-
-    // POS Restaurant — only if pos_restaurant is enabled for this user
-    if (hasModule('pos_restaurant')) {
-        apps.push({ title: "POS Restaurante", icon: Utensils, color: "text-orange-400", bgGlow: "rgba(249,115,22,0.3)", action: () => handleSSORedirect(`${posUrl}?industry=restaurant`) });
-    }
-
-    // Ecosystem Apps
-    if (hasModule('marketplace')) {
+    if ((session.allowed_modules || []).includes('marketplace') || session.role === 'admin') {
         apps.push({ title: "Marketplace", icon: Store, color: "text-purple-400", bgGlow: "rgba(168,85,247,0.3)", action: () => alert("Módulo en construcción") });
     }
     
-    if (hasModule('finanzas')) {
+    if ((session.allowed_modules || []).includes('finanzas') || session.role === 'admin') {
         apps.push({ title: "Finanzas", icon: LineChart, color: "text-green-400", bgGlow: "rgba(34,197,94,0.3)", action: () => alert("Módulo en construcción") });
     }
     
-    if (hasModule('contactia')) {
-        apps.push({ title: "ContactIA", icon: MessageSquare, color: "text-cyan-400", bgGlow: "rgba(6,182,212,0.3)", action: () => handleSSORedirect("https://os.aumatia.com.co/auth/sync?app=contactia") });
+    if ((session.allowed_modules || []).includes('contactia') || session.role === 'admin') {
+        apps.push({ title: "ContactIA", icon: MessageSquare, color: "text-cyan-400", bgGlow: "rgba(6,182,212,0.3)", action: () => handleAppLaunch(osUrl) });
     }
 
-    // Framer Motion Spring Animations for the Grid
     const container: Variants = {
         hidden: { opacity: 0 },
         show: {
@@ -147,27 +156,28 @@ export function Launcher() {
     };
 
     return (
-        <div className="min-h-screen bg-[#050b14] relative overflow-hidden">
-            {/* Ambient glow */}
-            <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-cyan-500/[0.03] rounded-full blur-[150px] pointer-events-none" />
+        <div 
+            className="min-h-screen relative overflow-hidden bg-[#050b14]"
+        >
+            <div 
+                className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full blur-[150px] pointer-events-none opacity-20 bg-cyan-500" 
+            />
             {/* Header del OS */}
-            <div className="absolute top-0 left-0 w-full p-6 flex justify-between items-center z-40 border-b border-white/5 bg-background/20 backdrop-blur-md">
+            <div className="absolute top-0 left-0 w-full p-6 flex justify-between items-center z-40 border-b border-white/5 bg-black/20 backdrop-blur-md">
                 <div className="flex items-center gap-4">
-                     <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#0b1221] to-[#0f172a] flex items-center justify-center border border-cyan-500/30 shadow-[0_0_15px_rgba(0,255,255,0.15)] overflow-hidden">
-                        <Cpu className="w-6 h-6 text-cyan-400" />
+                     <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#0b1221] to-[#0f172a] flex items-center justify-center border border-white/10 shadow-[0_0_15px_rgba(0,0,0,0.15)] overflow-hidden">
+                        {session.logourl ? (
+                            <img src={session.logourl} alt="Logo" className="w-full h-full object-cover" />
+                        ) : (
+                            <Cpu className="w-6 h-6 text-cyan-400" />
+                        )}
                      </div>
                      <div>
-                        <div className="text-white font-black text-lg tracking-widest uppercase">Aumatia OS</div>
+                        <div className="text-white font-black text-lg tracking-widest uppercase">{session.brand_name || "Aumatia OS"}</div>
                         <div className="text-white/50 text-xs flex items-center gap-2 font-medium tracking-wide">
-                            <span>Espacio: <strong className="text-cyan-400">{session.tenant_slug}</strong></span>
+                            <span>SaaS: <strong className="text-cyan-400">ACTIVO</strong></span>
                             <span className="w-1 h-1 bg-white/20 rounded-full" />
-                            <span>Rol: <span className="capitalize text-green-400">{session.role}</span></span>
-                            {session.industry && (
-                                <>
-                                    <span className="w-1 h-1 bg-white/20 rounded-full" />
-                                    <span>Ind: <span className="capitalize text-orange-300">{session.industry}</span></span>
-                                </>
-                            )}
+                            <span>Titular: <span className="capitalize text-green-400">{session.nombre}</span></span>
                         </div>
                      </div>
                 </div>
@@ -190,7 +200,7 @@ export function Launcher() {
                     <h2 className="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-white/70 tracking-tight">
                         Launchpad
                     </h2>
-                    <p className="text-lg text-cyan-400/80 font-medium mt-3">Accede a tus módulos autorizados.</p>
+                    <p className="text-lg text-white/60 font-medium mt-3">Accede a tus módulos autorizados.</p>
                 </motion.div>
 
                 {/* Grid Apps */}
@@ -207,14 +217,11 @@ export function Launcher() {
                             variants={item}
                             whileHover={{ scale: 1.05, y: -5 }}
                             whileTap={{ scale: 0.95 }}
-                            className="group relative bg-[#0b1221]/80 backdrop-blur-2xl border border-white/10 hover:border-white/20 p-8 rounded-[2rem] flex flex-col items-center justify-center gap-5 transition-all shadow-xl hover:shadow-2xl overflow-hidden cursor-pointer"
+                            className="group relative bg-[#0b1221]/60 backdrop-blur-2xl border border-white/10 hover:border-white/30 p-8 rounded-[2rem] flex flex-col items-center justify-center gap-5 transition-all shadow-xl hover:shadow-2xl overflow-hidden cursor-pointer"
                         >
-                            {/* Hover Bottom Glow */}
                             <div className="absolute inset-x-0 -bottom-10 h-32 blur-[40px] opacity-0 group-hover:opacity-30 transition-opacity duration-700 pointer-events-none" style={{ backgroundColor: app.bgGlow }} />
                             
-                            {/* Icon Container */}
-                            <div className={`w-20 h-20 rounded-[1.5rem] bg-[#050b14] flex items-center justify-center border border-white/5 group-hover:border-white/10 transition-colors shadow-inner relative z-10`}>
-                                {/* Light bleed in the inner box */}
+                            <div className="w-20 h-20 rounded-[1.5rem] bg-black/40 flex items-center justify-center border border-white/5 group-hover:border-white/10 transition-colors shadow-inner relative z-10">
                                 <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent rounded-[1.5rem] pointer-events-none" />
                                 <app.icon className={`w-10 h-10 ${app.color} group-hover:scale-110 transition-transform duration-300 drop-shadow-lg`} />
                             </div>
@@ -232,6 +239,119 @@ export function Launcher() {
                      </motion.div>
                 )}
             </div>
+
+            {/* BRAND MODAL */}
+            {showBrandModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center sm:p-6 p-0">
+                    <div 
+                        className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
+                        onClick={() => setShowBrandModal(false)}
+                    />
+
+                    <div className="relative bg-[#080d19]/95 backdrop-blur-2xl border border-white/10 sm:rounded-3xl w-full h-full sm:h-auto max-h-[90vh] sm:max-w-md shadow-2xl overflow-hidden flex flex-col z-50 transform transition-all">
+                        <div className="flex justify-between items-start p-6 border-b border-white/5 bg-gradient-to-r from-white/[0.02] to-transparent">
+                            <div>
+                                <h2 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
+                                    <Paintbrush className="w-5 h-5" style={{ color: session.secondary_color || '#06b6d4' }} /> 
+                                    Personalizar Marca
+                                </h2>
+                                <p className="text-xs text-white/50 mt-1 font-medium">Configura la apariencia global de tu ecosistema SaaS</p>
+                            </div>
+                            <button onClick={() => setShowBrandModal(false)} className="p-2 text-white/40 hover:text-white bg-white/5 hover:bg-white/10 rounded-full transition-all">
+                                <X className="w-5 h-5" />
+                            </button>
+                        </div>
+                        
+                        <form onSubmit={handleSaveBrand} className="flex-1 overflow-y-auto p-6 space-y-5">
+                            <div>
+                                <label className="text-xs uppercase font-bold text-white/40 mb-1.5 block">Nombre de la Marca</label>
+                                <input 
+                                    required
+                                    value={brandForm.brand_name}
+                                    onChange={e => setBrandForm({...brandForm, brand_name: e.target.value})}
+                                    placeholder="Ej. Mi Empresa SaaS" 
+                                    className="bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm text-white w-full focus:border-white/30 outline-none transition-colors"
+                                />
+                            </div>
+                            <div>
+                                <label className="text-xs uppercase font-bold text-white/40 mb-1.5 flex items-center gap-2">
+                                    <ImageIcon className="w-3 h-3" /> Logo de la Marca
+                                </label>
+                                <label 
+                                    className={`flex items-center justify-center gap-3 bg-black/40 border border-dashed border-white/20 hover:border-cyan-500/40 rounded-xl px-4 py-4 cursor-pointer transition-all group ${isUploading ? 'opacity-60 pointer-events-none' : ''}`}
+                                >
+                                    <input 
+                                        type="file"
+                                        accept="image/*"
+                                        className="hidden"
+                                        onChange={(e) => {
+                                            const file = e.target.files?.[0];
+                                            if (file) handleLogoUpload(file);
+                                        }}
+                                    />
+                                    {isUploading ? (
+                                        <div className="flex items-center gap-2 text-cyan-400 text-sm font-medium">
+                                            <div className="w-4 h-4 border-2 border-cyan-400/30 border-t-cyan-400 rounded-full animate-spin" />
+                                            Subiendo imagen...
+                                        </div>
+                                    ) : (
+                                        <div className="flex items-center gap-2 text-white/50 group-hover:text-white/70 text-sm font-medium transition-colors">
+                                            <Upload className="w-4 h-4" />
+                                            {brandForm.logourl ? 'Cambiar logo' : 'Seleccionar logo desde tu computador'}
+                                        </div>
+                                    )}
+                                </label>
+                                {brandForm.logourl && (
+                                    <div className="mt-3 text-center bg-black/20 p-3 rounded-xl border border-white/5">
+                                        <img src={brandForm.logourl} alt="Preview" className="h-12 object-contain mx-auto" />
+                                        <p className="text-[10px] text-white/30 mt-2 font-mono truncate">{brandForm.logourl}</p>
+                                    </div>
+                                )}
+                            </div>
+                            
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="text-xs uppercase font-bold text-white/40 mb-1.5 block">Color Base (Fondo)</label>
+                                    <div className="flex items-center gap-3 bg-black/40 border border-white/10 rounded-xl px-2 py-2">
+                                        <input 
+                                            type="color"
+                                            value={brandForm.primary_color}
+                                            onChange={e => setBrandForm({...brandForm, primary_color: e.target.value})}
+                                            className="w-8 h-8 rounded cursor-pointer bg-transparent border-0"
+                                        />
+                                        <span className="text-white/60 text-xs font-mono">{brandForm.primary_color}</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className="text-xs uppercase font-bold text-white/40 mb-1.5 block">Color de Acento</label>
+                                    <div className="flex items-center gap-3 bg-black/40 border border-white/10 rounded-xl px-2 py-2">
+                                        <input 
+                                            type="color"
+                                            value={brandForm.secondary_color}
+                                            onChange={e => setBrandForm({...brandForm, secondary_color: e.target.value})}
+                                            className="w-8 h-8 rounded cursor-pointer bg-transparent border-0"
+                                        />
+                                        <span className="text-white/60 text-xs font-mono">{brandForm.secondary_color}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div className="mt-4 p-4 rounded-xl border border-white/5 bg-gradient-to-br" style={{ backgroundImage: `linear-gradient(to bottom right, ${brandForm.primary_color}, #000000)` }}>
+                                <div className="text-sm font-bold text-white mb-2">Vista Previa In-App</div>
+                                <div className="w-full py-2 rounded-lg text-center text-xs font-bold shadow-lg" style={{ backgroundColor: brandForm.secondary_color, color: '#fff' }}>
+                                    Botón Primario
+                                </div>
+                            </div>
+
+                            <div className="pt-4 border-t border-white/5 mt-4">
+                                <button type="submit" disabled={isSaving} className="w-full py-3.5 rounded-xl text-black font-bold flex justify-center items-center gap-2 hover:opacity-90 shadow-[0_0_20px_rgba(0,180,255,0.2)] transition-all" style={{ backgroundColor: brandForm.secondary_color || '#06b6d4' }}>
+                                    {isSaving ? "Guardando cambios..." : <><Save className="w-4 h-4" /> Guardar Personalización</>}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

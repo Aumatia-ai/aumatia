@@ -13,87 +13,74 @@ const supabaseAdmin = createClient(supabaseUrl, serviceRoleKey, {
 });
 
 export interface FetchedProfile {
-    tenant_id: string;
-    tenant_slug: string;
+    id: string; // The user ID itself acts as the tenant ID
+    nombre: string | null;
+    telefono: string | null;
+    brand_name: string | null;
+    logourl: string | null;
+    primary_color: string | null;
+    secondary_color: string | null;
     role: string;
     industry: string;
     allowed_modules: string[];
 }
 
-/**
- * Server Action: Fetch user profile bypassing ALL RLS policies.
- * This eliminates every "infinite recursion" error.
- */
 export async function fetchUserProfileAction(userId: string, userEmail: string, userMetadata: any): Promise<FetchedProfile | null> {
     if (!serviceRoleKey) {
         throw new Error("SUPABASE_SERVICE_ROLE_KEY is missing.");
     }
 
-    // Master Admin Hardcoded Override
-    if (userEmail === "admin@aumatia.com.co") {
-        return {
-            tenant_id: "master",
-            tenant_slug: "master",
-            role: "admin",
-            industry: "retail",
-            allowed_modules: ["pos", "marketplace", "finanzas", "contactia", "web"]
-        };
-    }
-
-    // Step 1: Fetch tenant_users row for this user
-    const { data: tenantUser, error: tuErr } = await supabaseAdmin
-        .from('tenant_users')
-        .select('tenant_id, role, active_modules, is_active')
-        .eq('user_id', userId)
-        .eq('is_active', true)
+    const { data: usuario, error } = await supabaseAdmin
+        .from('usuarios')
+        .select('*')
+        .eq('id', userId)
         .maybeSingle();
 
-    if (tuErr) {
-        console.error("fetchUserProfileAction: Error consultando tenant_users:", tuErr.message);
+    if (error) {
+        console.error("fetchUserProfileAction: Error consultando usuarios:", error.message);
         return null;
     }
 
-    if (!tenantUser) {
-        // User exists in Auth but has no tenant assignment
+    if (!usuario) {
         return {
-            tenant_id: "none",
-            tenant_slug: "system",
+            id: userId,
+            nombre: userMetadata?.nombre || "Usuario Nuevo",
+            telefono: userMetadata?.telefono || null,
+            brand_name: null,
+            logourl: null,
+            primary_color: '#050b14',
+            secondary_color: '#06b6d4',
             role: "user",
             industry: "retail",
-            allowed_modules: []
+            allowed_modules: ["pos_retail", "pos_restaurant", "billing", "inventory"]
         };
     }
 
-    // Step 2: Fetch tenant slug
-    let tenantSlug = "demo";
-    const { data: tenant, error: tErr } = await supabaseAdmin
-        .from('tenants')
-        .select('slug')
-        .eq('id', tenantUser.tenant_id)
-        .maybeSingle();
+    console.log("fetchUserProfileAction: Raw DB row for user", userId, JSON.stringify(usuario));
 
-    if (tErr) {
-        console.warn("fetchUserProfileAction: No se pudo leer el tenant:", tErr.message);
-    } else if (tenant) {
-        tenantSlug = tenant.slug || "demo";
-    }
-
-    // Step 3: Parse allowed modules and derive industry from active_modules
-    const activeMods: Record<string, boolean> = tenantUser.active_modules || {};
+    const activeMods: Record<string, boolean> = usuario.active_modules || {};
     const allowed_modules = Object.keys(activeMods).filter(k => activeMods[k]);
 
-    // Derive industry from the POS type modules
-    let assignedIndustry = 'retail'; // default fallback
+    let assignedIndustry = 'retail';
     if (activeMods['pos_restaurant'] && !activeMods['pos_retail']) {
         assignedIndustry = 'restaurant';
     } else if (activeMods['pos_retail']) {
         assignedIndustry = 'retail';
     }
 
+    // Support both 'role' and 'rol' column names
+    const dbRole = usuario.role || usuario.rol || "user";
+    console.log("fetchUserProfileAction: Resolved role =", dbRole);
+
     return {
-        tenant_id: tenantUser.tenant_id,
-        tenant_slug: tenantSlug,
-        role: tenantUser.role,
+        id: usuario.id,
+        nombre: usuario.nombre,
+        telefono: usuario.telefono,
+        brand_name: usuario.brand_name || "Mi Negocio",
+        logourl: usuario.logourl || "",
+        primary_color: usuario.primary_color || '#050b14',
+        secondary_color: usuario.secondary_color || '#06b6d4',
+        role: dbRole,
         industry: assignedIndustry,
         allowed_modules
     };

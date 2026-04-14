@@ -18,10 +18,12 @@ ENV NEXT_TELEMETRY_DISABLED 1
 
 # Next.js inlines NEXT_PUBLIC_* variables at build time.
 # These are public (exposed to the browser), so hardcoding is safe.
-ENV NEXT_PUBLIC_SUPABASE_URL=https://yxohhquoppatndzzalyq.supabase.co
-ENV NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl4b2hocXVvcHBhdG5kenphbHlxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2ODY0NjgsImV4cCI6MjA5MTI2MjQ2OH0.O_mXgxEp2F7t58e617lupqhZfiJuGEeEUfkAN7tHwGI
+# Pointing to self-hosted Supabase on GCP.
+ENV NEXT_PUBLIC_SUPABASE_URL=https://db.aumatia.com.co
+ENV NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZV9yb2xlIiwiaXNzIjoic3VwYWJhc2UiLCJpYXQiOjE2NDE3NjkyMDAsImV4cCI6MTc5OTUzNTYwMH0.wIl2C6dgFZPjvIqHkbsr5fyUqw3GWKmIXGMfB2Y9_BY
 
-# Service Role Key is a SECRET — passed at build time, never hardcoded.
+# Service Role Key — needed at build time for Server Actions bundling.
+# Passed as a Docker build arg, NOT hardcoded.
 ARG SUPABASE_SERVICE_ROLE_KEY
 ENV SUPABASE_SERVICE_ROLE_KEY=$SUPABASE_SERVICE_ROLE_KEY
 
@@ -34,8 +36,9 @@ WORKDIR /app
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
 
-# Server Actions (fetchProfileAction, adminUserActions) need this at RUNTIME.
-ENV SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl4b2hocXVvcHBhdG5kenphbHlxIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NTY4NjQ2OCwiZXhwIjoyMDkxMjYyNDY4fQ.0HuoEG5gPvKebI7aFu3kKtfknLAFN9H2SFA6W3BnkZ8
+# SUPABASE_SERVICE_ROLE_KEY is injected at runtime via Cloud Run
+# environment variable configuration. Do NOT hardcode it here.
+# If not set via Cloud Run, the server actions will fail gracefully.
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs

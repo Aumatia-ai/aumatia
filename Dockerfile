@@ -16,17 +16,15 @@ COPY . .
 # Disable telemetry during build
 ENV NEXT_TELEMETRY_DISABLED 1
 
-# Next.js inlines NEXT_PUBLIC_* variables at build time.
-# These are public (exposed to the browser), so hardcoding is safe.
-# Pointing to self-hosted Supabase on GCP.
+# ── Supabase Self-Hosted (GCP) ──────────────────────────────────
+# Next.js inlines NEXT_PUBLIC_* at build time (client bundle).
+# SUPABASE_SERVICE_ROLE_KEY is also needed at build time so that
+# Server Actions (register, fetchProfile, etc.) get bundled with it.
+# In this self-hosted setup both keys are the same JWT.
 ENV NEXT_PUBLIC_SUPABASE_PROJECT_ID=self-hosted-gcp
 ENV NEXT_PUBLIC_SUPABASE_URL=https://db.aumatia.com.co
 ENV NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZV9yb2xlIiwiaXNzIjoic3VwYWJhc2UiLCJpYXQiOjE2NDE3NjkyMDAsImV4cCI6MTc5OTUzNTYwMH0.wIl2C6dgFZPjvIqHkbsr5fyUqw3GWKmIXGMfB2Y9_BY
-
-# Service Role Key — needed at build time for Server Actions bundling.
-# Passed as a Docker build arg, NOT hardcoded.
-ARG SUPABASE_SERVICE_ROLE_KEY
-ENV SUPABASE_SERVICE_ROLE_KEY=$SUPABASE_SERVICE_ROLE_KEY
+ENV SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZV9yb2xlIiwiaXNzIjoic3VwYWJhc2UiLCJpYXQiOjE2NDE3NjkyMDAsImV4cCI6MTc5OTUzNTYwMH0.wIl2C6dgFZPjvIqHkbsr5fyUqw3GWKmIXGMfB2Y9_BY
 
 RUN npm run build
 
@@ -34,12 +32,13 @@ RUN npm run build
 FROM node:20-alpine AS runner
 WORKDIR /app
 
-ENV NODE_ENV production
-ENV NEXT_TELEMETRY_DISABLED 1
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
 
-# SUPABASE_SERVICE_ROLE_KEY is injected at runtime via Cloud Run
-# environment variable configuration. Do NOT hardcode it here.
-# If not set via Cloud Run, the server actions will fail gracefully.
+# ── Runtime Supabase keys (server actions need these at runtime) ─
+ENV NEXT_PUBLIC_SUPABASE_URL=https://db.aumatia.com.co
+ENV NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZV9yb2xlIiwiaXNzIjoic3VwYWJhc2UiLCJpYXQiOjE2NDE3NjkyMDAsImV4cCI6MTc5OTUzNTYwMH0.wIl2C6dgFZPjvIqHkbsr5fyUqw3GWKmIXGMfB2Y9_BY
+ENV SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZV9yb2xlIiwiaXNzIjoic3VwYWJhc2UiLCJpYXQiOjE2NDE3NjkyMDAsImV4cCI6MTc5OTUzNTYwMH0.wIl2C6dgFZPjvIqHkbsr5fyUqw3GWKmIXGMfB2Y9_BY
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
@@ -55,8 +54,7 @@ USER nextjs
 
 EXPOSE 3000
 
-ENV PORT 3000
-# set hostname to localhost
-ENV HOSTNAME "0.0.0.0"
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
 
 CMD ["node", "server.js"]

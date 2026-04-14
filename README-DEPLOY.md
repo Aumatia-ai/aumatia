@@ -10,51 +10,38 @@ Este proyecto está configurado para desplegarse fácilmente en Google Cloud Run
 
 ## Variables de Entorno
 
-| Variable | Tipo | ¿Dónde se usa? | Cómo configurarla en Cloud Run |
+| Variable | Tipo | ¿Dónde se usa? | Cómo configurarla |
 |---|---|---|---|
-| `NEXT_PUBLIC_SUPABASE_URL` | Pública | Build-time (inlined por Next.js) | Ya hardcodeada en el Dockerfile |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Pública | Build-time (inlined por Next.js) | Ya hardcodeada en el Dockerfile |
-| `SUPABASE_SERVICE_ROLE_KEY` | **SECRETA** | Build-time + Runtime | Build arg + Variable de entorno en Cloud Run |
+| `NEXT_PUBLIC_SUPABASE_URL` | Pública | Build-time (inlined por Next.js) | Hardcodeada en el Dockerfile |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Pública | Build-time (inlined por Next.js) | Hardcodeada en el Dockerfile |
+| `SUPABASE_SERVICE_ROLE_KEY` | Servidor | Build-time + Runtime | Hardcodeada en el Dockerfile (ambas etapas) |
+
+> **Nota:** En esta instancia self-hosted, las keys `anon` y `service_role` son idénticas.
+> Ambas están hardcodeadas en el Dockerfile para simplificar el despliegue.
+> Si en el futuro se generan keys distintas, se debe volver al esquema de build-arg + Cloud Run env var.
 
 ## Pasos para Desplegar
 
 ### 1. Construir la imagen en Google Cloud Build
 
-Ejecuta el siguiente comando, reemplazando los valores entre corchetes:
-
 ```bash
 gcloud builds submit \
-  --tag gcr.io/[PROJECT_ID]/[APP_NAME] \
-  --build-arg SUPABASE_SERVICE_ROLE_KEY="tu_service_role_key_real"
+  --tag gcr.io/[PROJECT_ID]/[APP_NAME]
 ```
 
-> **⚠️ IMPORTANTE:** El `--build-arg` es necesario porque Next.js necesita la key al compilar los Server Actions. Sin ella, las funciones de registro, perfil, storage y admin no funcionarán.
+> No se necesitan `--build-arg` adicionales. Todas las keys están en el Dockerfile.
 
 ### 2. Desplegar en Cloud Run
-
-Una vez construida la imagen, despliégala con el siguiente comando. **Debes pasar la `SUPABASE_SERVICE_ROLE_KEY` como variable de entorno de runtime:**
 
 ```bash
 gcloud run deploy [APP_NAME] \
   --image gcr.io/[PROJECT_ID]/[APP_NAME] \
   --platform managed \
   --region us-central1 \
-  --allow-unauthenticated \
-  --set-env-vars SUPABASE_SERVICE_ROLE_KEY="tu_service_role_key_real"
+  --allow-unauthenticated
 ```
 
 - `--allow-unauthenticated`: Hace que tu servicio sea público.
-- `--set-env-vars`: Inyecta la key secreta en el contenedor en tiempo de ejecución.
-
-> **💡 Alternativa más segura:** Puedes usar [Secret Manager](https://cloud.google.com/secret-manager) de GCP para gestionar la key:
-> ```bash
-> gcloud run deploy [APP_NAME] \
->   --image gcr.io/[PROJECT_ID]/[APP_NAME] \
->   --platform managed \
->   --region us-central1 \
->   --allow-unauthenticated \
->   --set-secrets SUPABASE_SERVICE_ROLE_KEY=supabase-service-role-key:latest
-> ```
 
 ### 3. Configurar un Dominio Personalizado
 
@@ -71,5 +58,4 @@ Después de desplegar, sigue estos pasos para añadir tu dominio:
 *   El archivo `next.config.ts` ha sido modificado para incluir `output: 'standalone'`, lo que optimiza el tamaño de la imagen Docker.
 *   El `Dockerfile` utiliza una construcción en múltiples etapas para asegurar que la imagen final sea ligera y segura.
 *   Las variables `NEXT_PUBLIC_*` están hardcodeadas en el Dockerfile porque Next.js las necesita en build time y son públicas (se exponen al navegador).
-*   La `SUPABASE_SERVICE_ROLE_KEY` **nunca** debe hardcodearse en el Dockerfile ni en el repositorio. Siempre se pasa como build-arg y como variable de entorno en Cloud Run.
-
+*   La `SUPABASE_SERVICE_ROLE_KEY` está hardcodeada en ambas etapas (builder y runner) del Dockerfile para garantizar que las Server Actions funcionen tanto en build time como en runtime.

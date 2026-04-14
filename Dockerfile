@@ -19,6 +19,7 @@ ENV NEXT_TELEMETRY_DISABLED 1
 # Next.js inlines NEXT_PUBLIC_* variables at build time.
 # These are public (exposed to the browser), so hardcoding is safe.
 # Pointing to self-hosted Supabase on GCP.
+ENV NEXT_PUBLIC_SUPABASE_PROJECT_ID=self-hosted-gcp
 ENV NEXT_PUBLIC_SUPABASE_URL=https://db.aumatia.com.co
 ENV NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZV9yb2xlIiwiaXNzIjoic3VwYWJhc2UiLCJpYXQiOjE2NDE3NjkyMDAsImV4cCI6MTc5OTUzNTYwMH0.wIl2C6dgFZPjvIqHkbsr5fyUqw3GWKmIXGMfB2Y9_BY
 

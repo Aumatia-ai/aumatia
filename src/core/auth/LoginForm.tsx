@@ -63,7 +63,7 @@ export function LoginForm() {
                     alert("Error al crear cuenta: " + result.error);
                 } else {
                     // User created & auto-confirmed. Now sign them in immediately.
-                    const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+                    const { error: signInError } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
                     if (signInError) {
                         console.warn("Cuenta creada pero no se pudo iniciar sesión automáticamente:", signInError.message);
                         alert("Cuenta creada con éxito. Inicia sesión con tus credenciales.");
@@ -75,7 +75,7 @@ export function LoginForm() {
                 }
             } else if (mode === 'login') {
                 const { error } = await supabase.auth.signInWithPassword({
-                    email,
+                    email: email.trim(),
                     password
                 });
                 

@@ -1,16 +1,6 @@
 "use server";
 
-import { createClient } from '@supabase/supabase-js';
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
-
-const supabaseAdmin = createClient(supabaseUrl, serviceRoleKey, {
-    auth: {
-        autoRefreshToken: false,
-        persistSession: false
-    }
-});
+import { getSupabaseAdmin } from '../../../core/lib/supabaseAdmin';
 
 export interface UsuarioServer {
     id: string;
@@ -30,19 +20,24 @@ export interface UsuarioServer {
  * Fetch ALL users from public.usuarios (admin-only).
  */
 export async function fetchAllUsuariosAction(): Promise<UsuarioServer[]> {
-    if (!serviceRoleKey) throw new Error("SUPABASE_SERVICE_ROLE_KEY is missing.");
+    try {
+        const supabaseAdmin = getSupabaseAdmin();
 
-    const { data, error } = await supabaseAdmin
-        .from('usuarios')
-        .select('*')
-        .order('email', { ascending: true });
+        const { data, error } = await supabaseAdmin
+            .from('usuarios')
+            .select('*')
+            .order('email', { ascending: true });
 
-    if (error) {
-        console.error("fetchAllUsuariosAction:", error.message);
-        throw new Error(error.message);
+        if (error) {
+            console.error("fetchAllUsuariosAction:", error.message);
+            throw new Error(error.message);
+        }
+
+        return (data || []) as UsuarioServer[];
+    } catch (e: any) {
+        console.error("fetchAllUsuariosAction CRITICAL:", e.message || e);
+        throw e; // Rethrow because this is likely a UI-handled admin failure, but now it's logged on server.
     }
-
-    return (data || []) as UsuarioServer[];
 }
 
 /**
@@ -55,15 +50,20 @@ export async function updateUsuarioAction(userId: string, updates: {
     nombre?: string;
     telefono?: string;
 }): Promise<void> {
-    if (!serviceRoleKey) throw new Error("SUPABASE_SERVICE_ROLE_KEY is missing.");
+    try {
+        const supabaseAdmin = getSupabaseAdmin();
 
-    const { error } = await supabaseAdmin
-        .from('usuarios')
-        .update(updates)
-        .eq('id', userId);
+        const { error } = await supabaseAdmin
+            .from('usuarios')
+            .update(updates)
+            .eq('id', userId);
 
-    if (error) {
-        console.error("updateUsuarioAction:", error.message);
-        throw new Error(error.message);
+        if (error) {
+            console.error("updateUsuarioAction:", error.message);
+            throw new Error(error.message);
+        }
+    } catch (e: any) {
+        console.error("updateUsuarioAction CRITICAL:", e.message || e);
+        throw e;
     }
 }

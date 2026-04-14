@@ -1,22 +1,15 @@
 "use server";
 
-import { createClient } from '@supabase/supabase-js';
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
-
-const supabaseAdmin = createClient(supabaseUrl, serviceRoleKey, {
-    auth: { autoRefreshToken: false, persistSession: false }
-});
+import { getSupabaseAdmin } from '../lib/supabaseAdmin';
 
 /**
  * Ensures the 'logos' bucket exists in Supabase Storage.
  * Call this once or on-demand.
  */
 export async function ensureLogosBucketAction(): Promise<{ success: boolean; error?: string }> {
-    if (!serviceRoleKey) return { success: false, error: "Service role key missing." };
-
     try {
+        const supabaseAdmin = getSupabaseAdmin();
+
         // Check if bucket exists
         const { data: buckets } = await supabaseAdmin.storage.listBuckets();
         const exists = buckets?.some(b => b.name === 'logos');
@@ -36,7 +29,8 @@ export async function ensureLogosBucketAction(): Promise<{ success: boolean; err
 
         return { success: true };
     } catch (e: any) {
-        return { success: false, error: e.message };
+        console.error("ensureLogosBucketAction fatal:", e);
+        return { success: false, error: e.message || "Error al configurar storage." };
     }
 }
 
@@ -50,9 +44,9 @@ export async function uploadLogoAction(payload: {
     fileBase64: string;
     contentType: string;
 }): Promise<{ success: boolean; publicUrl?: string; error?: string }> {
-    if (!serviceRoleKey) return { success: false, error: "Service role key missing." };
-
     try {
+        const supabaseAdmin = getSupabaseAdmin();
+
         // Ensure bucket exists first
         await ensureLogosBucketAction();
 
@@ -89,6 +83,6 @@ export async function uploadLogoAction(payload: {
         return { success: true, publicUrl: urlData.publicUrl };
     } catch (e: any) {
         console.error("uploadLogoAction fatal:", e);
-        return { success: false, error: e.message };
+        return { success: false, error: e.message || "Error al subir logo." };
     }
 }

@@ -111,7 +111,9 @@ export function Launcher() {
 
     // Pure SaaS Link directly to the domain
     const posUrl = "https://pos.aumatia.com.co";
-    const osUrl = "https://os.aumatia.com.co";
+    const marketplaceUrl = "https://marketplace.aumatia.com.co/";
+    const contactiaUrl = "https://contactia.aumatia.com.co/";
+    const finanzasUrl = "https://bi.aumatia.com.co/";
 
     const handleAppLaunch = (url: string) => {
         window.open(url, '_blank');
@@ -131,15 +133,15 @@ export function Launcher() {
     apps.push({ title: "POS", icon: ShoppingCart, color: "text-blue-400", bgGlow: "rgba(59,130,246,0.3)", action: () => handleAppLaunch(posUrl) });
 
     if ((session.allowed_modules || []).includes('marketplace') || session.role === 'admin') {
-        apps.push({ title: "Marketplace", icon: Store, color: "text-purple-400", bgGlow: "rgba(168,85,247,0.3)", action: () => alert("Módulo en construcción") });
+        apps.push({ title: "Marketplace", icon: Store, color: "text-purple-400", bgGlow: "rgba(168,85,247,0.3)", action: () => handleAppLaunch(marketplaceUrl) });
     }
     
     if ((session.allowed_modules || []).includes('finanzas') || session.role === 'admin') {
-        apps.push({ title: "Finanzas", icon: LineChart, color: "text-green-400", bgGlow: "rgba(34,197,94,0.3)", action: () => alert("Módulo en construcción") });
+        apps.push({ title: "Finanzas", icon: LineChart, color: "text-green-400", bgGlow: "rgba(34,197,94,0.3)", action: () => handleAppLaunch(finanzasUrl) });
     }
     
     if ((session.allowed_modules || []).includes('contactia') || session.role === 'admin') {
-        apps.push({ title: "ContactIA", icon: MessageSquare, color: "text-cyan-400", bgGlow: "rgba(6,182,212,0.3)", action: () => handleAppLaunch(osUrl) });
+        apps.push({ title: "ContactIA", icon: MessageSquare, color: "text-cyan-400", bgGlow: "rgba(6,182,212,0.3)", action: () => handleAppLaunch(contactiaUrl) });
     }
 
     const container: Variants = {
@@ -309,19 +311,7 @@ export function Launcher() {
                                 )}
                             </div>
                             
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label className="text-xs uppercase font-bold text-white/40 mb-1.5 block">Color Base (Fondo)</label>
-                                    <div className="flex items-center gap-3 bg-black/40 border border-white/10 rounded-xl px-2 py-2">
-                                        <input 
-                                            type="color"
-                                            value={brandForm.primary_color}
-                                            onChange={e => setBrandForm({...brandForm, primary_color: e.target.value})}
-                                            className="w-8 h-8 rounded cursor-pointer bg-transparent border-0"
-                                        />
-                                        <span className="text-white/60 text-xs font-mono">{brandForm.primary_color}</span>
-                                    </div>
-                                </div>
+                            <div className="space-y-4">
                                 <div>
                                     <label className="text-xs uppercase font-bold text-white/40 mb-1.5 block">Color de Acento</label>
                                     <div className="flex items-center gap-3 bg-black/40 border border-white/10 rounded-xl px-2 py-2">

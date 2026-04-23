@@ -7,11 +7,11 @@ import { Menu, X, ChevronDown, Monitor, ShoppingBag, Activity, Code, Cpu, Sparkl
 import { cn } from "@/lib/utils";
 
 const solutions = [
-    { name: "Smart POS", href: "/solutions/smart-pos", icon: Monitor, color: "text-blue-400" },
-    { name: "Marketplaces", href: "/solutions/marketplace", icon: ShoppingBag, color: "text-purple-400" },
-    { name: "Finanzas", href: "/solutions/finances", icon: Activity, color: "text-green-400" },
-    { name: "Web & E-commerce", href: "/solutions/web-development", icon: Code, color: "text-orange-400" },
-    { name: "Agentes AI", href: "/solutions/agentes", icon: Sparkles, color: "text-fuchsia-400" },
+    { name: "Smart POS", href: "/smart-pos", icon: Monitor, color: "text-blue-400" },
+    { name: "Marketplaces", href: "/marketplace", icon: ShoppingBag, color: "text-purple-400" },
+    { name: "Finanzas", href: "/finanzas", icon: Activity, color: "text-green-400" },
+    { name: "E-commerce", href: "/ecommerce", icon: Code, color: "text-orange-400" },
+    { name: "Agentes AI", href: "/agentes-ai", icon: Sparkles, color: "text-fuchsia-400" },
     { name: "ContactIA", href: "/contactia", icon: Cpu, color: "text-cyan-400" },
 ];
 
@@ -80,7 +80,7 @@ export default function Navbar() {
                     <Link href="/precios" className="text-sm font-medium text-white/70 hover:text-neon-blue transition-colors">
                         Precios
                     </Link>
-                    <Link href="/os" className="text-sm font-medium text-cyan-400 hover:text-cyan-300 transition-colors border border-cyan-500/30 px-3 py-1 rounded-full bg-cyan-500/10">
+                    <Link href="/aumatia-os" className="text-sm font-medium text-cyan-400 hover:text-cyan-300 transition-colors border border-cyan-500/30 px-3 py-1 rounded-full bg-cyan-500/10">
                         Aumatia OS
                     </Link>
                 </nav>
@@ -143,7 +143,7 @@ export default function Navbar() {
                         </Link>
                         
                         <Link
-                            href="/os"
+                            href="/aumatia-os"
                             className="text-lg font-medium text-cyan-400 hover:text-cyan-300 px-2"
                             onClick={() => setIsOpen(false)}
                         >

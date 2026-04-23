@@ -7,6 +7,7 @@ import ContactIASection from "@/components/ContactIASection";
 import AumatiaOSPromo from "@/components/AumatiaOSPromo";
 import SyncSimulation from "@/components/SyncSimulation";
 import TrustFooter from "@/components/TrustFooter";
+import TestimonialsSection from "@/components/TestimonialsSection";
 
 export default function Home() {
   return (
@@ -28,6 +29,8 @@ export default function Home() {
         </div>
         <SyncSimulation />
       </section>
+
+      <TestimonialsSection />
 
       <TrustFooter />
     </main>

@@ -43,6 +43,21 @@ export default function AumatiaOSPage() {
                         >
                             Aumatia OS no es solo una herramienta, es el centro de gravedad de tu negocio. Conecta tu punto de venta, tienda online, finanzas y agentes de IA bajo un mismo núcleo de datos. Un solo inicio de sesión, un control total.
                         </motion.p>
+
+                        <motion.div
+                            initial={{ y: 40, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            transition={{ delay: 0.3 }}
+                            className="relative mx-auto max-w-5xl rounded-3xl overflow-hidden border border-white/10 shadow-2xl"
+                        >
+                            <img 
+                                src="/dashboard-mockup.png" 
+                                alt="Dashboard Aumatia OS" 
+                                className="w-full h-auto"
+                                loading="lazy"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
+                        </motion.div>
                     </div>
 
                     <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto mb-20">

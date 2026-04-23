@@ -79,7 +79,7 @@ export default function HeroSection() {
                         transition={{ delay: 0.2, duration: 0.8 }}
                         className="text-muted-foreground text-lg md:text-xl max-w-xl mb-8"
                     >
-                        ContactIA, Smart POS, Marketplace, Web, Finanzas o Agentes AI.
+                        Smart POS, Marketplace, E-commerce, Finanzas o Agentes AI.
                         Comienza con uno, conéctalos todos en <strong>Aumatia OS</strong>.
                     </motion.p>
 
@@ -144,7 +144,7 @@ export default function HeroSection() {
                         glowColor="rgba(59,130,246,0.5)" 
                         delay={0} 
                         positionClass="top-[10%] left-[50%]" 
-                        linkHref="/solutions/smart-pos" 
+                        linkHref="/smart-pos" 
                         dx={0} dy={15}
                     />
 
@@ -153,9 +153,9 @@ export default function HeroSection() {
                         icon={ShoppingBag} 
                         colorClass="text-purple-400" 
                         glowColor="rgba(168,85,247,0.5)" 
-                        delay={0.5} 
+                        delay={0} 
                         positionClass="top-[30%] left-[85%]" 
-                        linkHref="/solutions/marketplace" 
+                        linkHref="/marketplace" 
                         dx={-13} dy={7.5}
                     />
 
@@ -164,9 +164,9 @@ export default function HeroSection() {
                         icon={Activity} 
                         colorClass="text-green-400" 
                         glowColor="rgba(34,197,94,0.5)" 
-                        delay={1.5} 
+                        delay={0} 
                         positionClass="top-[70%] left-[85%]" 
-                        linkHref="/solutions/finances" 
+                        linkHref="/finanzas" 
                         dx={-13} dy={-7.5}
                     />
 
@@ -175,7 +175,7 @@ export default function HeroSection() {
                         icon={Headset} 
                         colorClass="text-fuchsia-500" 
                         glowColor="rgba(217,70,239,0.5)" 
-                        delay={1} 
+                        delay={0} 
                         positionClass="top-[90%] left-[50%]" 
                         linkHref="/contactia" 
                         dx={0} dy={-15}
@@ -186,9 +186,9 @@ export default function HeroSection() {
                         icon={Globe} 
                         colorClass="text-orange-400" 
                         glowColor="rgba(249,115,22,0.5)" 
-                        delay={2} 
+                        delay={0} 
                         positionClass="top-[70%] left-[15%]" 
-                        linkHref="/solutions/web-development" 
+                        linkHref="/ecommerce" 
                         dx={13} dy={-7.5}
                     />
 
@@ -197,9 +197,9 @@ export default function HeroSection() {
                         icon={Sparkles} 
                         colorClass="text-pink-400" 
                         glowColor="rgba(236,72,153,0.5)" 
-                        delay={2.5} 
+                        delay={0} 
                         positionClass="top-[30%] left-[15%]" 
-                        linkHref="/solutions/agentes" 
+                        linkHref="/agentes-ai" 
                         dx={13} dy={7.5}
                     />
 

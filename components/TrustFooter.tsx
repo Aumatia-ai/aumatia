@@ -8,12 +8,11 @@ export default function Footer() {
                 {/* Trust Bar */}
                 <div className="border-b border-white/10 pb-12 mb-12">
                     <p className="text-center text-sm text-white/40 mb-8 uppercase tracking-widest">Ecosistema de Integraciones</p>
-                    <div className="flex flex-wrap justify-center items-center gap-12 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
-                        {/* Text placeholders for logos as per requirements, normally would be SVGs */}
+                    <div className="flex flex-wrap justify-center items-center gap-12 opacity-50 hover:opacity-100 transition-all duration-500">
                         <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-500">Siigo</span>
                         <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">DIAN</span>
                         <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-yellow-600">Mercado Libre</span>
-                        <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-lime-500">Falabella</span>
+                        <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-emerald-500">Falabella</span>
                         <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-red-600">VTEX</span>
                     </div>
                 </div>
@@ -33,6 +32,7 @@ export default function Footer() {
                         <h4 className="font-bold text-white mb-6">Compañía</h4>
                         <ul className="space-y-4">
                             <li><Link href="/about" className="text-white/60 hover:text-neon-blue transition-colors text-sm">Quiénes Somos</Link></li>
+                            <li><Link href="/blog" className="text-white/60 hover:text-neon-blue transition-colors text-sm">Blog & Recursos</Link></li>
                         </ul>
                     </div>
 

@@ -33,6 +33,11 @@ export const metadata: Metadata = {
     description: "SaaS de prospección inteligente para PYMES. Unifica inventario, ventas y clientes.",
     images: ["/og-image.png"],
   },
+  icons: {
+    icon: "/icon.png",
+    shortcut: "/icon.png",
+    apple: "/apple-icon.png",
+  },
 };
 
 const organizationSchema = {

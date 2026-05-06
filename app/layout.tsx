@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { Providers } from "./providers";
+import WhatsAppBubble from "@/components/WhatsAppBubble";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -74,6 +75,7 @@ export default function RootLayout({
       <body className={inter.className} suppressHydrationWarning>
         <Providers>
           {children}
+          <WhatsAppBubble />
         </Providers>
         
         {GA_MEASUREMENT_ID && (

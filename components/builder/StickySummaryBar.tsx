@@ -25,8 +25,22 @@ export default function StickySummaryBar() {
         totalTodayCOP, 
         totalTodayUSD,
         selectedModules,
-        isOSSelected
+        isOSSelected,
+        osLevel
     } = useEcosystemContext();
+
+    // Build WhatsApp message with selected products
+    const buildWhatsAppUrl = () => {
+        const productNames: string[] = selectedModules.map(id => 
+            builderModules.find(m => m.id === id)?.title || id
+        );
+        if (isOSSelected) {
+            productNames.push(`Contactia (${osLevel.charAt(0).toUpperCase() + osLevel.slice(1)})`);
+        }
+        const productList = productNames.join(', ');
+        const message = `Hola Aumatia, estoy interesad@ en adquirir ${productList}. Me gustaría recibir más información.`;
+        return `https://wa.me/573118905418?text=${encodeURIComponent(message)}`;
+    };
 
     if (totalItems === 0) return null;
 
@@ -69,7 +83,7 @@ export default function StickySummaryBar() {
                                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-[0_0_10px_rgba(0,240,255,0.4)] relative group">
                                     <Cpu className="w-5 h-5 text-white" />
                                     <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-black px-2 py-1 rounded text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none border border-cyan-500">
-                                        Aumatia OS
+                                        Contactia
                                     </div>
                                 </div>
                             )}
@@ -107,10 +121,15 @@ export default function StickySummaryBar() {
                             <span className="text-[10px] text-white/30 block mt-0.5">Mensualidad Mes 1 + Setups</span>
                         </div>
                         
-                        <button className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-cyan-400 to-fuchsia-500 font-bold text-white flex items-center justify-center gap-2 hover:shadow-[0_0_30px_rgba(255,0,255,0.4)] transition-all duration-300 transform hover:-translate-y-1">
+                        <a 
+                            href={buildWhatsAppUrl()}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-cyan-400 to-fuchsia-500 font-bold text-white flex items-center justify-center gap-2 hover:shadow-[0_0_30px_rgba(255,0,255,0.4)] transition-all duration-300 transform hover:-translate-y-1"
+                        >
                             Finalizar Compra
                             <ArrowRight className="w-4 h-4" />
-                        </button>
+                        </a>
                     </div>
 
                 </div>

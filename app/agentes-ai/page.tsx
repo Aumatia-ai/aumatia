@@ -48,9 +48,9 @@ export default function agentesaiPage() {
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.3 }}
             >
-              <Link href="/demo" className="px-8 py-4 bg-neon-blue hover:bg-neon-purple text-black font-bold rounded-full transition-all inline-block">
+              <a href={`https://wa.me/573118905418?text=${encodeURIComponent('Hola Aumatia, estoy interesad@ en una demo de Agentes AI')}`} target="_blank" rel="noopener noreferrer" className="px-8 py-4 bg-neon-blue hover:bg-neon-purple text-black font-bold rounded-full transition-all inline-block">
                 Solicitar Demo
-              </Link>
+              </a>
             </motion.div>
           </div>
 

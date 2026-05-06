@@ -89,11 +89,11 @@ export default function HeroSection() {
                         transition={{ delay: 0.4, duration: 0.8 }}
                         className="flex flex-col sm:flex-row gap-4"
                     >
-                        <Link href="/#precios" className="px-8 py-4 bg-neon-blue hover:bg-neon-purple text-background font-bold rounded-full transition-all flex items-center justify-center gap-2 group shadow-[0_0_20px_rgba(0,240,255,0.4)]">
-                            Ver Planes
+                        <Link href="/precios" className="px-8 py-4 bg-neon-blue hover:bg-neon-purple text-background font-bold rounded-full transition-all flex items-center justify-center gap-2 group shadow-[0_0_20px_rgba(0,240,255,0.4)]">
+                            Ver Precios
                             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                         </Link>
-                        <a href="https://wa.me/573000000000" target="_blank" rel="noopener noreferrer" className="px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium rounded-full transition-all">
+                        <a href="https://wa.me/573118905418?text=" target="_blank" rel="noopener noreferrer" className="px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium rounded-full transition-all">
                             Hablar con Asesor
                         </a>
                     </motion.div>

@@ -22,7 +22,7 @@ export default function DemoPage() {
                             Agenda tu Demostración <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Personalizada</span>
                         </h1>
                         <p className="text-lg text-white/50 max-w-2xl mx-auto">
-                            Descubre cómo nuestro ecosistema de hardware y software puede escalar tus operaciones.
+                            Selecciona las soluciones que quieres conocer y agenda tu reunión directamente por WhatsApp.
                         </p>
                     </div>
 
@@ -37,13 +37,12 @@ export default function DemoPage() {
                     {/* Explicación Debajo del Formulario */}
                     <div className="max-w-3xl mx-auto bg-white/5 border border-white/10 p-8 rounded-2xl text-center backdrop-blur-sm relative z-10">
                         <div className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4 border border-white/10">
-                            <span className="text-xl">🤝</span>
+                            <span className="text-xl">💬</span>
                         </div>
-                        <h3 className="text-xl font-bold text-white mb-2">¿Qué sucede después de enviar el formulario?</h3>
+                        <h3 className="text-xl font-bold text-white mb-2">¿Cómo funciona?</h3>
                         <p className="text-white/60 leading-relaxed max-w-2xl mx-auto">
-                            Esta reunión será 100% personalizada y diseñada a la medida de los retos de tu negocio. 
-                            Al momento de agendar la demo, un experto de nuestro equipo te estará contactando a la mayor brevedad posible 
-                            para <strong className="text-white">confirmar tu solicitud y agendar la hora y el día</strong> que mejor se adapte a tu disponibilidad.
+                            Selecciona los productos que te interesan y al presionar el botón serás redirigido a WhatsApp con un mensaje listo. 
+                            Nuestro equipo <strong className="text-white">confirmará tu demo y coordinará el mejor horario</strong> para una reunión 100% personalizada.
                         </p>
                     </div>
 

@@ -56,7 +56,7 @@ export default function OSBuilderCard() {
                             <div className="inline-block px-3 py-1 bg-white/5 rounded-full text-[10px] font-bold tracking-widest uppercase text-cyan-400 mb-1 border border-white/5">
                                 Motor Descuentos
                             </div>
-                            <h3 className={cn("text-2xl font-black transition-colors", isOSSelected ? "text-white" : "text-white/90")}>Aumatia OS</h3>
+                            <h3 className={cn("text-2xl font-black transition-colors", isOSSelected ? "text-white" : "text-white/90")}>Contactia</h3>
                         </div>
                     </div>
                     

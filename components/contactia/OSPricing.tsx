@@ -1,5 +1,4 @@
 import { Check } from "lucide-react";
-import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 const tiers = [
@@ -31,6 +30,11 @@ const tiers = [
         buttonText: "Agendar Reunión"
     }
 ];
+
+const buildWhatsAppUrl = (planName: string) => {
+    const message = `Hola Aumatia, estoy interesad@ en el plan ${planName} de Contactia. Me gustaría recibir más información.`;
+    return `https://wa.me/573118905418?text=${encodeURIComponent(message)}`;
+};
 
 export default function OSPricing() {
     return (
@@ -75,8 +79,10 @@ export default function OSPricing() {
                                 ))}
                             </ul>
                             <div className="mt-auto pt-8">
-                                <Link 
-                                    href="#"
+                                <a 
+                                    href={buildWhatsAppUrl(tier.name)}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                     className={cn(
                                         "block w-full py-4 rounded-xl text-center font-bold transition-all",
                                         tier.highlight 
@@ -85,7 +91,7 @@ export default function OSPricing() {
                                     )}
                                 >
                                     {tier.buttonText}
-                                </Link>
+                                </a>
                             </div>
                         </div>
                     ))}
@@ -94,3 +100,4 @@ export default function OSPricing() {
         </section>
     );
 }
+

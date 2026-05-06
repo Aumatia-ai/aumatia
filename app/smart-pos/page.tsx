@@ -48,9 +48,9 @@ export default function SmartPOSPage() {
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.3 }}
             >
-              <Link href="/demo" className="px-8 py-4 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-full transition-all inline-block shadow-[0_0_20px_rgba(59,130,246,0.4)]">
+              <a href={`https://wa.me/573118905418?text=${encodeURIComponent('Hola Aumatia, estoy interesad@ en una demo del sistema Smart POS')}`} target="_blank" rel="noopener noreferrer" className="px-8 py-4 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-full transition-all inline-block shadow-[0_0_20px_rgba(59,130,246,0.4)]">
                 Solicitar Demo
-              </Link>
+              </a>
             </motion.div>
           </div>
 

@@ -131,9 +131,9 @@ export default async function BlogPostPage({ params }: Props) {
           <div className="bg-white/5 p-8 rounded-3xl text-center">
             <h3 className="text-2xl font-bold text-white mb-4">¿Listo para aplicar esto en tu PYME?</h3>
             <p className="text-white/60 mb-6">Agenda una demo gratuita y descubre cómo Aumatia puede escalar tus ventas automáticamente.</p>
-            <Link href="/demo" className="inline-block px-8 py-4 bg-cyan-500 hover:bg-cyan-600 text-white font-bold rounded-full transition-colors">
+            <a href={`https://wa.me/573118905418?text=${encodeURIComponent('Hola Aumatia, estoy interesad@ en una demo de sus soluciones')}`} target="_blank" rel="noopener noreferrer" className="inline-block px-8 py-4 bg-cyan-500 hover:bg-cyan-600 text-white font-bold rounded-full transition-colors">
               Solicitar Demo
-            </Link>
+            </a>
           </div>
         </div>
       </div>

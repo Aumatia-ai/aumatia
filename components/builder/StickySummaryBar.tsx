@@ -1,7 +1,7 @@
 "use client";
 
 import { useEcosystemContext } from "./EcosystemContext";
-import { formatCurrency, builderModules } from "@/lib/builderData";
+import { formatCurrency, builderModules, smartPosPlans } from "@/lib/builderData";
 import { ArrowRight, Sparkles, Monitor, Activity, ShoppingBag, Globe, BotMessageSquare, Cpu } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -26,14 +26,20 @@ export default function StickySummaryBar() {
         totalTodayUSD,
         selectedModules,
         isOSSelected,
-        osLevel
+        osLevel,
+        smartPosLevel,
+        isSmartPosQuote
     } = useEcosystemContext();
 
     // Build WhatsApp message with selected products
     const buildWhatsAppUrl = () => {
-        const productNames: string[] = selectedModules.map(id => 
-            builderModules.find(m => m.id === id)?.title || id
-        );
+        const productNames: string[] = selectedModules.map(id => {
+            if (id === 'smart-pos') {
+                const plan = smartPosPlans[smartPosLevel];
+                return `Smart POS ${plan.title}${plan.isQuote ? ' (Cotización)' : ''}`;
+            }
+            return builderModules.find(m => m.id === id)?.title || id;
+        });
         if (isOSSelected) {
             productNames.push(`Contactia (${osLevel.charAt(0).toUpperCase() + osLevel.slice(1)})`);
         }
@@ -48,6 +54,11 @@ export default function StickySummaryBar() {
     const finalMonthly = currency === 'COP' ? finalMonthlyCOP : finalMonthlyUSD;
     const totalToday = currency === 'COP' ? totalTodayCOP : totalTodayUSD;
     const discountAmount = baseMonthly - finalMonthly;
+
+    // When the only selection (or no priced selection) is the quote-only Smart POS
+    // Empresarial plan, there is no valid numeric total to show.
+    const hasPricedItems = baseMonthly > 0;
+    const showQuoteOnly = isSmartPosQuote && !hasPricedItems;
 
     return (
         <div className="fixed bottom-0 left-0 right-0 z-50 p-4 md:p-6 pb-6 md:pb-8 animate-in slide-in-from-bottom-full duration-500 fade-in">
@@ -92,6 +103,13 @@ export default function StickySummaryBar() {
 
                     {/* CENTER: Calculations */}
                     <div className="flex-1 w-full flex flex-col items-start lg:items-center justify-center border-y lg:border-y-0 lg:border-x border-white/10 py-4 lg:py-0 px-0 lg:px-8">
+                        {showQuoteOnly ? (
+                            <div className="text-center">
+                                <span className="text-2xl lg:text-3xl font-black text-white block">Cotización a la medida</span>
+                                <span className="text-xs text-white/40">Smart POS Empresarial · agenda tu reunión</span>
+                            </div>
+                        ) : (
+                          <>
                         {discountPercentage > 0 ? (
                             <div className="flex items-center gap-2 mb-1 w-full justify-between lg:justify-center">
                                 <span className="text-white/40 line-through text-sm">Base: {formatCurrency(baseMonthly, currency)}</span>
@@ -109,25 +127,32 @@ export default function StickySummaryBar() {
                             <span className="text-3xl lg:text-4xl font-black text-white">{formatCurrency(finalMonthly, currency)}</span>
                             <span className="text-white/50 text-sm">/mes</span>
                         </div>
+                        {isSmartPosQuote && (
+                            <span className="text-[10px] text-white/40 mt-1 block">+ Smart POS Empresarial (cotización aparte)</span>
+                        )}
+                          </>
+                        )}
                     </div>
 
                     {/* RIGHT: Total Today & CTA */}
                     <div className="flex-1 w-full flex flex-col items-end gap-3 justify-center">
-                        <div className="text-right">
-                            <span className="text-xs font-bold text-white/50 block mb-1 uppercase">Pago Inicial (Hoy):</span>
-                            <div className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-100 to-gray-400">
-                                {formatCurrency(totalToday, currency)}
+                        {!showQuoteOnly && (
+                            <div className="text-right">
+                                <span className="text-xs font-bold text-white/50 block mb-1 uppercase">Pago Inicial (Hoy):</span>
+                                <div className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-100 to-gray-400">
+                                    {formatCurrency(totalToday, currency)}
+                                </div>
+                                <span className="text-[10px] text-white/30 block mt-0.5">Mensualidad Mes 1 + Setups</span>
                             </div>
-                            <span className="text-[10px] text-white/30 block mt-0.5">Mensualidad Mes 1 + Setups</span>
-                        </div>
-                        
-                        <a 
+                        )}
+
+                        <a
                             href={buildWhatsAppUrl()}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-cyan-400 to-fuchsia-500 font-bold text-white flex items-center justify-center gap-2 hover:shadow-[0_0_30px_rgba(255,0,255,0.4)] transition-all duration-300 transform hover:-translate-y-1"
                         >
-                            Finalizar Compra
+                            {showQuoteOnly ? 'Agendar reunión' : 'Finalizar Compra'}
                             <ArrowRight className="w-4 h-4" />
                         </a>
                     </div>

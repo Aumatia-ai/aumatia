@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect, useMemo, ReactNode } from "react";
-import { Currency, OSLevel, builderModules, osData, FALLBACK_TRM } from "@/lib/builderData";
+import { Currency, OSLevel, SmartPosLevel, builderModules, osData, smartPosPlans, FALLBACK_TRM } from "@/lib/builderData";
 
 interface EcosystemContextProps {
     currency: Currency;
@@ -13,7 +13,12 @@ interface EcosystemContextProps {
     // Core Modules state
     selectedModules: string[];
     toggleModule: (id: string) => void;
-    
+
+    // Smart POS sub-plan state
+    smartPosLevel: SmartPosLevel;
+    setSmartPosLevel: (level: SmartPosLevel) => void;
+    isSmartPosQuote: boolean;
+
     // OS State
     isOSSelected: boolean;
     toggleOS: () => void;
@@ -42,7 +47,8 @@ const EcosystemContext = createContext<EcosystemContextProps | undefined>(undefi
 export function EcosystemProvider({ children, initialCurrency = 'COP' }: { children: ReactNode, initialCurrency?: Currency }) {
     const [currency, setCurrency] = useState<Currency>(initialCurrency);
     const [selectedModules, setSelectedModules] = useState<string[]>([]);
-    
+    const [smartPosLevel, setSmartPosLevel] = useState<SmartPosLevel>('pro');
+
     const [isOSSelected, setIsOSSelected] = useState<boolean>(false);
     const [osLevel, setOSLevel] = useState<OSLevel>('starter');
 
@@ -110,6 +116,15 @@ export function EcosystemProvider({ children, initialCurrency = 'COP' }: { child
 
         // Accumulate standard modules
         selectedModules.forEach(id => {
+            // Smart POS uses its sub-plan pricing; Empresarial is quote-only (excluded from total)
+            if (id === 'smart-pos') {
+                const plan = smartPosPlans[smartPosLevel];
+                if (!plan.isQuote) {
+                    monthlyCOP += plan.monthlyPriceCOP ?? 0;
+                    setupCOP += plan.setupPriceCOP ?? 0;
+                }
+                return;
+            }
             const mod = builderModules.find(m => m.id === id);
             if (mod) {
                 monthlyCOP += mod.monthlyPriceCOP;
@@ -149,7 +164,9 @@ export function EcosystemProvider({ children, initialCurrency = 'COP' }: { child
             totalTodayCOP,
             totalTodayUSD
         };
-    }, [selectedModules, isOSSelected, osLevel, trm]);
+    }, [selectedModules, smartPosLevel, isOSSelected, osLevel, trm]);
+
+    const isSmartPosQuote = selectedModules.includes('smart-pos') && !!smartPosPlans[smartPosLevel].isQuote;
 
     return (
         <EcosystemContext.Provider value={{
@@ -159,6 +176,9 @@ export function EcosystemProvider({ children, initialCurrency = 'COP' }: { child
             isLoadingTRM,
             selectedModules,
             toggleModule,
+            smartPosLevel,
+            setSmartPosLevel,
+            isSmartPosQuote,
             isOSSelected,
             toggleOS,
             osLevel,

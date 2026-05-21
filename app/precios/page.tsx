@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { EcosystemProvider } from '@/components/builder/EcosystemContext';
 import EcosystemToggle from '@/components/builder/EcosystemToggle';
 import EcosystemCard from '@/components/builder/EcosystemCard';
+import SmartPosCard from '@/components/builder/SmartPosCard';
 import OSBuilderCard from '@/components/builder/OSBuilderCard';
 import StickySummaryBar from '@/components/builder/StickySummaryBar';
 import Navbar from '@/components/Navbar';
@@ -35,11 +36,21 @@ export default function BuilderPage() {
                         </div>
 
                         {/* EL GRID PRINCIPAL DEL CONSTRUCTOR */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10 mb-20">
-                            {builderModules.map(module => (
-                                <EcosystemCard key={module.id} module={module} />
-                            ))}
-                            <OSBuilderCard />
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10 mb-20">
+                            {/* Destacados: ocupan 2 tarjetas cada uno */}
+                            <div className="sm:col-span-2">
+                                <SmartPosCard />
+                            </div>
+                            <div className="sm:col-span-2">
+                                <OSBuilderCard />
+                            </div>
+
+                            {/* Resto de herramientas */}
+                            {builderModules
+                                .filter(module => module.id !== 'smart-pos')
+                                .map(module => (
+                                    <EcosystemCard key={module.id} module={module} />
+                                ))}
                         </div>
 
                         {/* EXPLICACIÓN DE DESCUENTOS - VISUAL TIER LIST */}

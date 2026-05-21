@@ -47,7 +47,7 @@ const EcosystemContext = createContext<EcosystemContextProps | undefined>(undefi
 export function EcosystemProvider({ children, initialCurrency = 'COP' }: { children: ReactNode, initialCurrency?: Currency }) {
     const [currency, setCurrency] = useState<Currency>(initialCurrency);
     const [selectedModules, setSelectedModules] = useState<string[]>([]);
-    const [smartPosLevel, setSmartPosLevel] = useState<SmartPosLevel>('pro');
+    const [smartPosLevel, setSmartPosLevel] = useState<SmartPosLevel>('lite');
 
     const [isOSSelected, setIsOSSelected] = useState<boolean>(false);
     const [osLevel, setOSLevel] = useState<OSLevel>('starter');

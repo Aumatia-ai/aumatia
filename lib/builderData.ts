@@ -46,7 +46,7 @@ export const builderModules: EcosystemModuleData[] = [
         description: "Tu propia tienda digital personalizada de alta conversión.",
         iconName: "Globe",
         monthlyPriceCOP: 125000,
-        setupPriceCOP: 450000,
+        setupPriceCOP: 800000,
         features: ["Diseño 100% a medida", "Pasarelas de pago", "Dominio propio"]
     },
     {
